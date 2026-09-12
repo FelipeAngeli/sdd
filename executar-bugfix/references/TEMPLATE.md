@@ -7,32 +7,37 @@
 - Bugs Corrigidos: [Y]
 - Bugs Não Corrigidos: [Z] (ver "Bloqueios")
 - Testes de Regressão Criados: [N]
-- Issue do Linear: [LIG-XXX ou "sem issue"]
+- Issue vinculada: [identificador no rastreador configurado ou "sem issue"]
 
 ## Detalhes por Bug
 | ID | Severidade | Status | Camada da causa raiz | Correção | Testes de regressão criados |
 |----|------------|--------|----------------------|----------|------------------------------|
-| BUG-01 | Alta | Corrigido | datasource / repository / cubit / widget / navegação | [descrição] | [arquivos e nomes dos testes] |
+| BUG-01 | Alta | Corrigido | [camada de `<stack_projeto>`] | [descrição] | [arquivos e nomes dos testes] |
 
 ## Verificação
+[Uma linha por comando de `<comandos_projeto>` que se aplica.]
+
 | Etapa | Comando | Resultado |
 |-------|---------|-----------|
-| Formatação | `make format-check` | OK / NOK |
-| Análise estática | `make analyze` | [N] issues (esperado: 0) |
-| Suíte de testes | `make test` | TODOS PASSANDO / [N] falhando |
-| Cobertura | `make coverage` | `Lines: [hit]/[total] ([X]%)` — gate 90% OK / FAIL |
-| Golden tests | `flutter test --tags golden` | TODOS PASSANDO / [N] falhando |
-| Integration tests | `make e2e-[feature] DEVICE=[id]` | PASSOU / FALHOU / NÃO EXECUTADO |
+| Format | [comando do config] | OK / NOK |
+| Lint | [comando do config] | [N] issues (esperado: 0) |
+| Testes | [comando do config] | TODOS PASSANDO / [N] falhando |
+| Cobertura | [comando do config] | [resultado] — threshold [X]% OK / FAIL |
+| Validação visual | [comando do config, se aplicável] | TODOS PASSANDO / [N] falhando / N/A |
+| Ponta a ponta | [comando do config, se aplicável] | PASSOU / FALHOU / NÃO EXECUTADO |
 
-> Goldens regenerados nesta rodada? [não / sim — aprovado pelo usuário em [contexto]]
+> Artefatos de validação visual regenerados nesta rodada? [não / sim — aprovado pelo usuário em [contexto]]
 
 ## Evidências visuais
-| BUG | Antes | Depois | Tema verificado |
-|-----|-------|--------|-----------------|
-| BUG-0X | [screenshot] | [screenshot] | claro e escuro |
+[Preencher apenas se `<ui_projeto>` indicar validação visual.]
+
+| BUG | Antes | Depois | Variações verificadas |
+|-----|-------|--------|-----------------------|
+| BUG-0X | [evidência] | [evidência] | [ex.: temas, tamanhos de tela] |
 
 ## Bloqueios
-[Bugs cuja causa raiz está no `backend/` (read-only) ou que dependem de decisão do usuário. Descrever o achado e o que é necessário para destravar.]
+[Bugs cuja causa raiz está em área read-only de `<limites_projeto>`, ou que dependem de decisão
+do usuário. Descreva o achado e o que é necessário para destravar.]
 
 ## Conclusão
 [Parecer final]
