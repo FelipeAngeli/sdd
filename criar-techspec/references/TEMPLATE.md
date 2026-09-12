@@ -14,71 +14,67 @@
 - Principais relacionamentos entre componentes
 - Visão geral do fluxo de dados]
 
-### Mapeamento Clean Architecture
+### Mapeamento por camada
 
 <critical>
-**OBRIGATÓRIO.** Toda funcionalidade precisa declarar em qual camada cada arquivo vive. Presentation **nunca** acessa Data diretamente; `domain/` é Dart puro (sem `package:flutter`, sem `dio`, sem Modular).
+**OBRIGATÓRIO.** Toda funcionalidade precisa declarar em qual camada cada arquivo vive, usando
+as camadas e a ordem de dependência declaradas em `<stack_projeto>` do `sdd.config.md`. As
+regras de direção de dependência do projeto não podem ser violadas: nenhuma camada pode importar
+de uma camada que dependa dela.
 </critical>
 
 | Camada | Arquivo | Responsabilidade | Novo ou modificado |
 | --- | --- | --- | --- |
-| `domain/entities` | `lib/features/[feature]/domain/entities/[nome]_entity.dart` | [Entidade pura, `Equatable`] | novo/modificado |
-| `domain/repositories` | `lib/features/[feature]/domain/repositories/[nome]_repository.dart` | [Contrato abstrato retornando `Either<Failure, T>`] | novo/modificado |
-| `domain/usecases` | `lib/features/[feature]/domain/usecases/[acao]_usecase.dart` | [Uma regra de negócio por usecase] | novo/modificado |
-| `data/models` | `lib/features/[feature]/data/models/[nome]_model.dart` | [`fromJson`/`toJson` + mapper para entity] | novo/modificado |
-| `data/datasources` | `lib/features/[feature]/data/datasources/[nome]_remote_datasource.dart` | [Chamadas `dio`; lança exceções tipadas] | novo/modificado |
-| `data/repositories` | `lib/features/[feature]/data/repositories/[nome]_repository_impl.dart` | [Traduz exceção → `Failure`] | novo/modificado |
-| `presentation/bloc` | `lib/features/[feature]/presentation/bloc/[nome]_cubit.dart` | [Estados: inicial, carregando, sucesso, vazio, erro] | novo/modificado |
-| `presentation/pages` | `lib/features/[feature]/presentation/pages/[nome]_page.dart` | [Tela — **exige golden test light + dark**] | novo/modificado |
-| `presentation/widgets` | `lib/features/[feature]/presentation/widgets/[nome]_widget.dart` | [Componente reutilizável] | novo/modificado |
-| módulo | `lib/features/[feature]/[feature]_module.dart` | [`binds` + `ChildRoute` com rota nomeada] | novo/modificado |
+| [camada do config] | `[caminho real no projeto]` | [responsabilidade] | novo/modificado |
 
-### Navegação e injeção de dependência
+[Uma linha por arquivo. Se o projeto não tem camadas formais, agrupe por responsabilidade
+(entrada, regra de negócio, acesso a dados, apresentação) e declare isso explicitamente.]
 
-[- Rotas nomeadas registradas (via `flutter_modular`) — **sem `MaterialPageRoute` inline e sem instanciar widget no ponto de navegação**
-- Binds novos e seu escopo (`addLazySingleton` / `addSingleton` / `addInstance`)
-- Guards de rota aplicáveis
-- Módulo pai que importa/exporta esses binds]
+### Navegação e registro de dependências
 
-### Reuso de `lib/core/`
+[- Pontos de entrada/rotas registrados seguindo o padrão de roteamento declarado em
+  `<stack_projeto>` — **sem instanciar dependência direto no ponto de entrada**
+- Dependências novas e o escopo de cada uma (instância única, por chamada, etc.), seguindo o
+  padrão de injeção de dependência do projeto
+- Guards/middlewares de acesso aplicáveis
+- Módulo/camada pai que expõe essas dependências, quando a arquitetura do projeto tiver essa
+  noção]
 
-[O que já existe e será reusado em vez de recriado: design system, `AppTheme`, cliente HTTP, `Failure`s, logger, storage seguro. **Justifique cada componente novo em `core/`.**]
+### Reuso do código compartilhado do projeto
+
+[O que já existe e será reusado em vez de recriado: componentes de UI, tema/estilos, cliente
+HTTP, tipos de erro, logger, armazenamento — conforme mapeado na análise exploratória.
+**Justifique cada abstração nova introduzida no código compartilhado.**]
 
 ## Design de implementação
 
 ### Principais interfaces
 
-[Definir os principais contratos em **Dart** (≤20 linhas por exemplo):
+[Definir os principais contratos de código **na linguagem do projeto** (declarada em
+`<stack_projeto>`), com no máximo 20 linhas por bloco de código:
 
-```dart
-// Contrato de repositório — domain/ é Dart puro
-abstract interface class NomeRepository {
-  Future<Either<Failure, NomeEntity>> buscar(String id);
-}
+- O contrato entre a camada que orquestra a regra de negócio e a camada que acessa dados
+  externos (repositório, cliente HTTP, storage)
+- Uma unidade de regra de negócio por bloco, com a assinatura de entrada/saída e o tipo de erro
+  que ela pode retornar
 
-// Usecase — uma responsabilidade
-class BuscarNomeUsecase {
-  const BuscarNomeUsecase(this._repository);
-  final NomeRepository _repository;
+Indique a linguagem do bloco de código (ex.: ` ```typescript `) para manter o realce de sintaxe.]
 
-  Future<Either<Failure, NomeEntity>> call(String id) => _repository.buscar(id);
-}
-```
+### Máquina de estados
 
-]
+[Declarar a máquina de estados da funcionalidade. Todo fluxo precisa cobrir carregando, sucesso,
+**vazio** e **erro** — não só o caminho feliz.
 
-### Estados do BLoC/Cubit
-
-[Declarar a máquina de estados. Todo fluxo precisa cobrir carregando, sucesso, **vazio** e **erro** — não só o caminho feliz.
-
-| Estado | Quando é emitido | O que a UI mostra |
+| Estado | Quando é emitido | O que a interface mostra |
 | --- | --- | --- |
-| `[NomeInitial]` | [Condição] | [Comportamento visual] |
-| `[NomeLoading]` | [Condição] | [Indicador de carregamento, botão desabilitado] |
+| `[NomeInitial]` | [Condição] | [Comportamento inicial] |
+| `[NomeLoading]` | [Condição] | [Indicador de carregamento, ação desabilitada] |
 | `[NomeSuccess]` | [Condição] | [Conteúdo] |
 | `[NomeEmpty]` | [Condição] | [Estado vazio] |
 | `[NomeError]` | [Condição] | [Mensagem e ação de retry] |
-]
+
+Se a stack não usa máquina de estados explícita, declare os mesmos quatro casos como
+comportamento esperado da camada de apresentação/saída.]
 
 ### Modelos de dados
 
@@ -87,22 +83,24 @@ class BuscarNomeUsecase {
 
 - **NÃO** descrever contratos como tipos inline em bullet points (ex.: `location: { name, admin1, ... }`).
 - **SEMPRE** documentar cada entidade/contrato em subseção própria (`#### \`NomeDoTipo\` — descrição`).
-- **SEMPRE** incluir tabela de campos (Campo | Tipo | Obrigatório | Descrição) antes do JSON de exemplo.
-- **SEMPRE** incluir bloco ` ```json ` formatado e indentado com valores realistas (não placeholders genéricos).
-- **SEMPRE** indicar o tipo Dart correspondente e se o campo é nullable no model.
-- Variantes/degradações (ex.: campo `null`) devem ter JSON separado + blockquote explicando o comportamento.
-- Envelopes de erro: tabela Código | HTTP | `Failure` correspondente + exemplo JSON.
-- Mapeamentos JSON → model → entity: tabela Origem | Destino.
-- Campos ausentes no payload normalizados para `null` — mencionar isso no parágrafo introdutório.
+- **SEMPRE** incluir tabela de campos (Campo | Tipo | Obrigatório | Descrição) antes do exemplo formatado.
+- **SEMPRE** incluir um bloco de código formatado (ex.: ` ```json `), indentado, com valores realistas (não placeholders genéricos).
+- **SEMPRE** indicar o tipo correspondente na linguagem do projeto e se o campo é opcional/nulo no modelo interno.
+- Variantes/degradações (ex.: campo ausente ou nulo) devem ter exemplo separado + blockquote explicando o comportamento.
+- Envelopes de erro: tabela Código | Status | Tipo de erro no projeto + exemplo formatado.
+- Mapeamentos entre payload e as estruturas internas: tabela Origem | Destino.
+- Campos ausentes no payload e como são normalizados — mencionar isso no parágrafo introdutório.
 </critical>
 
-Contratos JSON consumidos da API — prontos para mapear em models e exibir na UI. [Completar contexto específico da feature. Campos ausentes no payload são normalizados para `null`.]
+Contratos de dados consumidos da API — prontos para mapear nas estruturas internas e exibir na
+interface. [Completar contexto específico da feature. Declarar como campos ausentes no payload
+são normalizados.]
 
 #### `[NomeDoTipo]` — [descrição curta]
 
-| Campo | Tipo JSON | Tipo Dart | Obrigatório | Descrição |
+| Campo | Tipo no payload | Tipo no projeto | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
-| `[campo]` | `[string/number/...]` | `[String/int/DateTime?]` | sim/não | [Descrição] |
+| `[campo]` | `[string/number/...]` | `[tipo na linguagem do projeto]` | sim/não | [Descrição] |
 
 ```json
 {
@@ -122,48 +120,50 @@ Contratos JSON consumidos da API — prontos para mapear em models e exibir na U
 
 #### `[NomeDoErro]` — envelope de erro tipado
 
-| Código | HTTP | `Failure` no app | Significado |
+| Código | Status | Tipo de erro no projeto | Significado |
 | --- | --- | --- | --- |
-| `[codigo]` | `[status]` | `[ServerFailure/ValidationFailure/AuthFailure]` | [Descrição] |
+| `[codigo]` | `[status]` | `[tipo de erro declarado na arquitetura do projeto]` | [Descrição] |
 
 ```json
 {
   "error": {
     "code": "[codigo]",
-    "message": "[mensagem conforme padrão do backend]"
+    "message": "[mensagem conforme padrão do serviço]"
   }
 }
 ```
 
-#### Mapeamento JSON → model → entity
+#### Mapeamento entre payload e estruturas internas
 
-| Origem (payload) | Destino (model) | Destino (entity) |
+| Origem (payload) | Destino (modelo de dados) | Destino (entidade/estrutura de domínio) |
 | --- | --- | --- |
-| `[campo_origem]` | `[campoModel]` | `[campoEntity]` |
+| `[campo_origem]` | `[campoModelo]` | `[campoEntidade]` |
 
 ## Contratos de API consumidos
 
 <critical>
-O `backend/` (NestJS) é **read-only** e é a **fonte de verdade** deste contrato. Confirme cada rota lendo o controller e o DTO em `backend/src/**` antes de documentar aqui — não suponha.
+Se a fonte de verdade do contrato for acessível (código do serviço, especificação de contrato —
+ex.: OpenAPI —, ou schema), confirme cada rota nela antes de documentar aqui — não suponha.
+Respeite as áreas read-only declaradas em `<limites_projeto>`: consultar sim, editar não.
 </critical>
 
 <critical>
 **OBRIGATÓRIO — formatação visual e legível:**
 
 - **NÃO** listar rotas como bullet points compactos com tudo inline.
-- **SEMPRE** começar com tabela de visão geral (Método | Rota | Autenticação | Datasource que consome).
+- **SEMPRE** começar com tabela de visão geral (Método | Rota | Autenticação | Componente do projeto que consome).
 - **SEMPRE** documentar cada rota em subseção própria (`#### \`MÉTODO /rota\``).
-- **SEMPRE** incluir, por rota: tabela de query params/body, tabela de respostas (Status | Corpo | `Failure` resultante | Quando), bloco ` ```http ` com a requisição e blocos ` ```json ` com exemplos de resposta.
+- **SEMPRE** incluir, por rota: tabela de query params/body, tabela de respostas (Status | Corpo | Tipo de erro resultante | Quando), bloco ` ```http ` com a requisição e blocos ` ```json ` com exemplos de resposta.
 - Cobrir **todos** os cenários relevantes: sucesso, lista vazia, erro de validação, erro do servidor, timeout, sem conectividade.
-- Usar blockquote (`>`) para comportamentos não óbvios (ex.: "lista vazia não é erro HTTP — a UI mostra estado vazio").
+- Usar blockquote (`>`) para comportamentos não óbvios (ex.: "lista vazia não é erro HTTP — a interface mostra estado vazio").
 - Separar rotas com `---`.
 </critical>
 
 ### Visão geral
 
-| Método | Rota | Autenticação | Datasource que consome | Origem no backend |
+| Método | Rota | Autenticação | Componente do projeto que consome | Origem no serviço |
 | --- | --- | --- | --- | --- |
-| `[GET/POST/...]` | `[ /rota ]` | [Bearer/pública] | `[nome]_remote_datasource.dart` | `backend/src/[modulo]/[nome].controller.ts` |
+| `[GET/POST/...]` | `[ /rota ]` | [ex.: Bearer/pública] | `[componente que faz a chamada]` | `[caminho no código-fonte do serviço, quando acessível]` |
 
 ---
 
@@ -173,19 +173,19 @@ O `backend/` (NestJS) é **read-only** e é a **fonte de verdade** deste contrat
 
 **Query params** _(ou **Body** para POST/PUT/PATCH)_
 
-| Param | Tipo | Default | Regras (conforme DTO do backend) |
+| Param | Tipo | Default | Regras (conforme a fonte de verdade do contrato) |
 | --- | --- | --- | --- |
 | `[param]` | `[tipo]` | `[default ou —]` | [Validações e regras] |
 
 **Respostas**
 
-| Status | Corpo | `Failure` resultante | Quando |
+| Status | Corpo | Tipo de erro resultante | Quando |
 | --- | --- | --- | --- |
 | `[200]` | `[TipoResposta]` | — | [Condição de sucesso] |
-| `[400/422]` | `[TipoErro]` | `ValidationFailure` | [Erro de validação com campo] |
-| `[401]` | `[TipoErro]` | `AuthFailure` | [Token ausente/expirado] |
-| `[500]` | `[TipoErro]` | `ServerFailure` | [Falha do servidor] |
-| — | — | `NetworkFailure` | [`DioExceptionType.connectionTimeout` / `SocketException`] |
+| `[400/422]` | `[TipoErro]` | `[erro de validação declarado na arquitetura do projeto]` | [Erro de validação com campo] |
+| `[401]` | `[TipoErro]` | `[erro de autenticação declarado na arquitetura do projeto]` | [Token ausente/expirado] |
+| `[500]` | `[TipoErro]` | `[erro de servidor declarado na arquitetura do projeto]` | [Falha do servidor] |
+| — | — | `[erro de rede declarado na arquitetura do projeto]` | [Timeout / sem conectividade] |
 
 **Exemplo — sucesso**
 
@@ -212,7 +212,7 @@ Authorization: Bearer [token]
 }
 ```
 
-> [Nota sobre o comportamento resultante na UI, se aplicável.]
+> [Nota sobre o comportamento resultante na interface, se aplicável.]
 
 **Exemplo — [cenário de erro]**
 
@@ -233,120 +233,100 @@ Authorization: Bearer [token]
 
 ---
 
-## Design e tokens (Figma)
+## Design e tokens
 
-[Preencher quando houver referência de design. Obtido via `mcp__claude_ai_Figma__get_design_context` e `get_variable_defs`.
+[Preencher apenas se `<integracoes_projeto>` indicar uma ferramenta de design ativa (ex.: Figma)
+e o PRD tiver referências de design na seção "Referências de design". Caso contrário, declare
+"não aplicável" e pule o restante desta seção.
 
-| Tela | node-id | Golden test correspondente |
+| Tela | Referência | Elemento de teste visual correspondente |
 | --- | --- | --- |
-| `[Nome da tela]` | `[node-id]` | `test/features/[feature]/presentation/pages/[nome]_page_test.dart` |
+| `[Nome da tela]` | `[identificador]` | `[caminho do teste, conforme <ui_projeto>]` |
 
 **Tokens** — reusar token existente sempre que possível:
 
-| Token do Figma | Equivalente no app | Ação |
+| Token do design | Equivalente no projeto | Ação |
 | --- | --- | --- |
-| `[color/primary]` | `AppTheme.[...]` | reusar / criar |
+| `[color/primary]` | `[...]` | reusar / criar |
 
-- Divergências entre design e `AppTheme` atual e a decisão tomada
-- Assets a baixar (`mcp__claude_ai_Figma__download_assets`) e destino em `assets/`]
+- Divergências entre design e implementação atual e a decisão tomada
+- Assets a baixar e destino no projeto]
 
 ## Pontos de integração
 
 [Incluir apenas se a funcionalidade exigir integrações externas:
 
-- Serviços, SDKs ou APIs externos (mapas, pagamento, push, analytics)
+- Serviços, SDKs ou APIs externos (ex.: mapas, pagamento, push, analytics)
 - Requisitos de autenticação e onde o token é lido
-- Permissões de plataforma necessárias (Android `AndroidManifest.xml` / iOS `Info.plist`)
+- Permissões ou configuração de plataforma necessárias, conforme `<ui_projeto>` (ex.: manifesto Android / Info.plist no iOS)
 - Abordagem de tratamento de erros]
 
 ## Abordagem de testes
 
 <critical>
-Cobertura mínima do projeto: **≥90% por linha** (gate real em `tool/coverage.sh`, executado por `make coverage`). Popule esta seção com o **máximo de casos de teste possível** — ela é a entrada direta do `criar-tasks`.
+Threshold de cobertura do projeto: ver `<comandos_projeto>`. Popule esta seção com o **máximo de
+casos de teste possível** — ela é a entrada direta do `criar-tasks`.
 </critical>
 
 <critical>
-Antes de escrever qualquer teste, a skill `.claude/skills/flutter/flutter-test-behavior-audit/SKILL.md` é obrigatória: auditoria dos testes existentes → mapa de cenários por camada → só então implementação. `mocktail` é o único mock permitido.
+Antes de escrever qualquer cenário de teste, audite os testes existentes do projeto: mapeie o
+que já está coberto por camada e reuse os helpers/fixtures encontrados na análise exploratória —
+só então declare os cenários novos. Use a biblioteca de mock/dublê declarada em `<stack_projeto>`
+como única forma de dublê.
 </critical>
 
-### Testes unitários (domain + data)
+### Níveis de teste
 
-[- **Usecases**: um teste por regra de negócio, sucesso e falha
-- **Repositories**: mapeiam exceção do datasource → `Failure` correta (mockar o **datasource**, nunca o repositório)
-- **Datasources**: usar `DioException` real com `DioExceptionType` correto e `Response` com status real — não `Exception` genérica
-- **Models/mappers**: `fromJson` com payload completo, com campos ausentes, com tipo inesperado
-- Nomes no formato `should <expected> when <condition>`
-- Listar aqui os cenários críticos, incluindo: 400/422 com erro de campo, 401, 500, timeout, `SocketException`, body malformado]
+[Uma subseção por nível de teste suportado pela stack, conforme `<stack_projeto>`. Para cada
+nível, liste os cenários concretos — caminho feliz **e** caminho de falha.
 
-### Testes de BLoC/Cubit
+Níveis comuns, use os que se aplicam:
 
-[- `bloc_test` para cada transição de estado
-- `expect: orderedEquals([...])` quando a ordem importa
-- Cobrir: carregando → sucesso, carregando → vazio, carregando → erro
-- Duplo toque no botão de submit: a segunda ação é ignorada enquanto a primeira está em voo]
+- **Unitário** — regra de negócio isolada, sem dependência externa
+- **Integração entre componentes** — a unidade com suas colaboradoras reais
+- **Contrato/API** — request e response conferidos contra a fonte de verdade
+- **Interface** — cada estado renderiza o que deve, incluindo vazio, carregando e erro
+- **Visual** — apenas se `<ui_projeto>` indicar ferramenta de validação visual
+- **Ponta a ponta** — apenas os fluxos principais do usuário
 
-### Testes de widget
-
-[- Cada estado do Cubit renderiza o que deve: conteúdo, estado vazio, mensagem de erro **no lugar certo**, indicador de carregamento, botão desabilitado durante o envio
-- `pumpWidget` com `MaterialApp` (não `MaterialApp.router`), Cubit injetado via `BlocProvider`
-- Sem bootstrap de `Module` e sem `Modular.get<T>()` em teste unitário
-- Semantics de acessibilidade quando relevante]
-
-### Testes golden (obrigatórios para toda página nova)
-
-[- Um golden em **tema claro** e um em **tema escuro** por tela
-- Helper: `pumpScreenWithTheme(tester, screen: ..., brightness: ..., surfaceSize: const Size(390, 844))` de `test/_helpers/pump_screen_with_theme.dart`
-- Tag `'golden'` (declarada em `dart_test.yaml`; excluída automaticamente no Linux)
-- Escritos **antes** da implementação da página
-- Regenerar apenas com aprovação explícita: `flutter test --update-goldens`
-- Listar as telas e os estados que ganham golden]
-
-### Testes de integração / E2E
-
-[- Local: `integration_test/[feature]/`
-- Execução: `make e2e-[feature] DEVICE=<id>` (ver `Makefile`) ou `flutter test integration_test/[feature] --flavor dev -d <device>`
-- Exigem **device/emulador real e rede** — não rodam no gate padrão de CI
-- Declarar explicitamente se o teste **escreve** dados no ambiente DEV
-- Cobrir apenas os fluxos de usuário principais, não casos de borda]
+Para cada cenário de falha, especifique o erro concreto esperado, não uma exceção genérica.]
 
 ### Meta de cobertura
 
-[| Camada | Arquivos | Meta |
-| --- | --- | --- |
-| domain | `[...]` | 100% |
-| data | `[...]` | ≥90% |
-| presentation | `[...]` | ≥90% |
-
-Verificação: `make coverage` (falha abaixo de 90%).]
+[Threshold do projeto: ver `<comandos_projeto>`. Declare a meta por área e como verificar.
+Se o projeto não tem gate de cobertura, declare "sem gate" e liste mesmo assim os cenários
+obrigatórios.]
 
 ## Sequenciamento do desenvolvimento
 
 ### Ordem de construção
 
-[Definir sequência de implementação seguindo as camadas — dependências antes dos dependentes:
+[Definir sequência de implementação seguindo as camadas declaradas em `<stack_projeto>` —
+dependências antes dos dependentes. Sequência genérica de exemplo, adapte às camadas reais do
+projeto:
 
-1. `domain/` — entities, contrato de repositório, usecases (Dart puro, testável isoladamente)
-2. `data/` — models/mappers, datasource, implementação do repositório
-3. `presentation/` — Cubit/BLoC, depois widgets, depois a página
-4. Módulo e rotas nomeadas (binds + `ChildRoute`)
-5. Testes de integração/E2E do fluxo completo]
+1. Camada de domínio/regra de negócio — testável isoladamente, sem dependência de framework
+2. Camada de acesso a dados — modelos/mapeadores, cliente do serviço externo, implementação do repositório
+3. Camada de apresentação — máquina de estados, depois componentes, depois a tela/rota
+4. Registro de módulo/dependências e rotas
+5. Testes de integração/ponta a ponta do fluxo completo]
 
 ### Dependências técnicas
 
 [Listar bloqueadores de dependências:
 
-- Endpoints do backend já disponíveis? em qual ambiente (dev/homolog/prod)?
-- Design finalizado no Figma (claro e escuro)?
-- Pacotes novos no `pubspec.yaml` — justificar cada um
-- Permissões/configuração nativa (Android/iOS) necessárias]
+- APIs/serviços consumidos já disponíveis? em qual ambiente?
+- Design finalizado, quando `<integracoes_projeto>` indicar ferramenta de design ativa (cobrindo todos os temas suportados, se houver)?
+- Dependências/pacotes novos no manifesto do projeto — justificar cada um
+- Permissões ou configuração de plataforma necessárias, conforme `<ui_projeto>`]
 
 ## Monitoramento e observabilidade
 
-[Definir abordagem usando a infraestrutura existente do app:
+[Definir abordagem usando a infraestrutura existente do projeto:
 
-- Eventos de analytics a registrar (nome e propriedades)
-- Erros reportados a Crashlytics/Sentry e com qual contexto
-- Logs via `lib/core/logging` — nível apropriado e **redaction obrigatória de PII** (nunca logar token, CPF, telefone ou e-mail em claro)
+- Eventos de analytics a registrar (nome e propriedades), se aplicável
+- Erros reportados à ferramenta de observabilidade do projeto (ex.: Sentry, Crashlytics) e com qual contexto
+- Logs via o mecanismo de logging já existente no projeto — nível apropriado e redaction obrigatória de dado sensível (nunca logar token, credencial ou dado pessoal em claro)
 - Como diagnosticar a funcionalidade em produção]
 
 ## Considerações técnicas
@@ -369,26 +349,28 @@ Verificação: `make coverage` (falha abaixo de 90%).]
 
 ### Segurança
 
-[- Onde tokens/credenciais são armazenados (storage seguro, nunca `SharedPreferences` em claro)
-- Nenhum segredo hardcoded no source
-- Validação de entrada por deep link
-- Dados pessoais em log — confirmar redaction]
+[Verifique contra `../_shared/SECURITY_BASELINE.md` e registre aqui o que é específico desta
+feature, além das regras de `<seguranca_extensoes>`.]
 
-### Conformidade com regras e skills
+### Conformidade com as regras do projeto
 
-[Listar as regras e skills aplicáveis e como a especificação as respeita:
+[Listar as regras aplicáveis e como a especificação as respeita:
 
-- `@.claude/CLAUDE.md` — critical rules do projeto
-- `@rules.md` — regras de engenharia
-- Skills relevantes de `.claude/skills/flutter/` (ver `_INDEX.md`): clean-architecture, bloc-state-management, modular-di, modular-routing, error-handling, logging, test-behavior-audit, tdd-testing, code-quality, feature-docs
+- Regras invioláveis registradas em `<limites_projeto>` do config
+- `../_shared/SECURITY_BASELINE.md` e `../_shared/QUALITY_BASELINE.md`
+- Convenções específicas de `<qualidade_extensoes>` e `<seguranca_extensoes>`
 - Desvios, se houver, com justificativa]
 
 ### Documentação da feature
 
-[Toda feature entrega documentação dupla (critical rule de `@.claude/CLAUDE.md`):
+[Conforme `<documentacao_projeto>` do config:
 
-- `docs/[feature]/` — doc técnica oficial em PT-BR (propósito, arquitetura, fluxos, edge cases)
-- Registro estratégico no container Obsidian do projeto, com link de volta para `docs/[feature]/`]
+- Local de documentação técnica da feature e idioma
+- Se `<integracoes_projeto>` indicar uma base de conhecimento externa ativa (ex.: Obsidian,
+  Notion), registre também lá, com link de volta para a documentação técnica. Caso contrário,
+  pule esta etapa.
+
+Se `<documentacao_projeto>` indicar "não aplicável", declare isso e siga.]
 
 ### Arquivos relevantes e dependentes
 
