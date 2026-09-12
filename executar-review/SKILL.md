@@ -74,10 +74,15 @@ As regras invioláveis de `<limites_projeto>` são bloqueantes. Verifique:
 - [ ] **Direção de dependência respeitada** — conforme a ordem de camadas de `<stack_projeto>`;
       nenhuma camada importa de quem depende dela
 - [ ] **Camada de regra de negócio isolada** — sem dependência de framework de interface ou de
-      biblioteca de acesso a dados, quando o padrão do projeto exigir isso
-- [ ] **Erros tratados como parte do contrato**, no formato que o projeto adota
-- [ ] **Pontos de entrada/rotas registrados** conforme o padrão do projeto
-- [ ] **Injeção de dependência** conforme o padrão do projeto, sem acesso global espalhado
+      biblioteca de acesso a dados, quando o padrão arquitetural de `<stack_projeto>` exigir isso
+- [ ] **Erros tratados como parte do contrato** — conforme o campo "Tratamento de erro" de
+      `<stack_projeto>`, sem falha engolida em silêncio nem exceção vazando fora do previsto
+- [ ] **Pontos de entrada/rotas registrados** — conforme o campo "Roteamento / pontos de entrada"
+      de `<stack_projeto>`
+- [ ] **Injeção de dependência** — conforme o campo "Injeção de dependência" de `<stack_projeto>`,
+      sem acesso global espalhado pelo código de produção
+- [ ] **Logging pelo mecanismo declarado** — conforme o campo "Logging" de `<stack_projeto>`, sem
+      saída direta para console no código de produção e sem dado sensível em claro
 - [ ] **Nenhuma alteração em área read-only de `<limites_projeto>`**
 - [ ] **SOLID e coesão** aplicados
 

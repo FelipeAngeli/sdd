@@ -13,10 +13,11 @@
 | Regra | Status | Observações |
 |-------|--------|-------------|
 | Direção de dependência entre camadas respeitada | OK/NOK | [obs] |
-| Camada de regra de negócio isolada conforme o padrão do projeto | OK/NOK | [obs] |
-| Erros tratados no formato que o projeto adota | OK/NOK | [obs] |
-| Pontos de entrada/rotas registrados conforme o padrão | OK/NOK | [obs] |
-| Injeção de dependência conforme o padrão | OK/NOK | [obs] |
+| Camada de regra de negócio isolada conforme o padrão arquitetural de `<stack_projeto>` | OK/NOK | [obs] |
+| Erros tratados conforme "Tratamento de erro" de `<stack_projeto>` | OK/NOK | [obs] |
+| Pontos de entrada/rotas registrados conforme "Roteamento / pontos de entrada" de `<stack_projeto>` | OK/NOK | [obs] |
+| Injeção de dependência conforme "Injeção de dependência" de `<stack_projeto>` | OK/NOK | [obs] |
+| Logging pelo mecanismo declarado em "Logging" de `<stack_projeto>` | OK/NOK | [obs] |
 | Área read-only de `<limites_projeto>` intocada | OK/NOK | [obs] |
 | SOLID e coesão | OK/NOK | [obs] |
 

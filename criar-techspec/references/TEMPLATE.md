@@ -32,10 +32,10 @@ de uma camada que dependa dela.
 
 ### Navegação e registro de dependências
 
-[- Pontos de entrada/rotas registrados seguindo o padrão de roteamento declarado em
+[- Pontos de entrada/rotas registrados seguindo o campo "Roteamento / pontos de entrada" de
   `<stack_projeto>` — **sem instanciar dependência direto no ponto de entrada**
 - Dependências novas e o escopo de cada uma (instância única, por chamada, etc.), seguindo o
-  padrão de injeção de dependência do projeto
+  campo "Injeção de dependência" de `<stack_projeto>`
 - Guards/middlewares de acesso aplicáveis
 - Módulo/camada pai que expõe essas dependências, quando a arquitetura do projeto tiver essa
   noção]
@@ -265,7 +265,7 @@ e o PRD tiver referências de design na seção "Referências de design". Caso c
 - Serviços, SDKs ou APIs externos (ex.: mapas, pagamento, push, analytics)
 - Requisitos de autenticação e onde o token é lido
 - Permissões ou configuração de plataforma necessárias, conforme `<ui_projeto>` (ex.: manifesto Android / Info.plist no iOS)
-- Abordagem de tratamento de erros]
+- Abordagem de tratamento de erros da integração, coerente com o campo "Tratamento de erro" de `<stack_projeto>`]
 
 ## Abordagem de testes
 
@@ -332,7 +332,7 @@ projeto:
 
 - Eventos de analytics a registrar (nome e propriedades), se aplicável
 - Erros reportados à ferramenta de observabilidade do projeto (ex.: Sentry, Crashlytics) e com qual contexto
-- Logs via o mecanismo de logging já existente no projeto — nível apropriado e redaction obrigatória de dado sensível (nunca logar token, credencial ou dado pessoal em claro)
+- Logs via o mecanismo declarado no campo "Logging" de `<stack_projeto>` — nível apropriado e redaction obrigatória de dado sensível (nunca logar token, credencial ou dado pessoal em claro)
 - Como diagnosticar a funcionalidade em produção]
 
 ## Considerações técnicas

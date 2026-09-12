@@ -12,6 +12,10 @@ Gerenciador de pacotes: [ex.: pnpm]
 Ordem de dependência entre camadas (usada para sequenciar tasks): [ex.: utils → hooks → componentes → páginas → rotas]
 Framework de teste: [ex.: Vitest + Testing Library]
 Biblioteca de mock/dublê: [ex.: vi.mock nativo do Vitest]
+Tratamento de erro: [como o projeto representa e propaga falha — ex.: exceções tipadas propagadas até a borda, tratadas em um handler central; ou retorno de resultado tipado verificado pelo chamador]
+Injeção de dependência: [como uma dependência chega a quem a usa — ex.: por construtor/parâmetro, montada no ponto de entrada; ou contêiner declarativo; ou "sem padrão formal"]
+Roteamento / pontos de entrada: [como o consumidor alcança a funcionalidade — ex.: rotas nomeadas registradas em arquivo central; ou handlers descobertos por convenção de pasta; ou "não aplicável"]
+Logging: [mecanismo único de log do projeto e como é obtido — ex.: logger estruturado injetado por módulo; ou "sem mecanismo definido"]
 </stack_projeto>
 
 <comandos_projeto>

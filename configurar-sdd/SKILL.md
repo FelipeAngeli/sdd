@@ -46,8 +46,19 @@ Investigue, nesta ordem:
   mensagens de commit
 - **Indícios de UI** — presença de componentes de interface, testes de snapshot/screenshot,
   configuração de i18n
+- **Padrões transversais** — estes não aparecem em manifesto nenhum: só o código os demonstra.
+  Leia uma **amostra pequena e representativa** (2 a 4 arquivos que atravessem o fluxo, do ponto
+  de entrada até o acesso a dados) e infira:
+  - **Tratamento de erro** — o projeto lança e propaga exceção, ou devolve resultado tipado que o
+    chamador verifica? Onde a falha é finalmente tratada?
+  - **Injeção de dependência** — a dependência chega por construtor/parâmetro, vem de um
+    contêiner, ou é acessada globalmente?
+  - **Roteamento / pontos de entrada** — como o consumidor alcança a funcionalidade, e onde isso
+    é registrado?
+  - **Logging** — existe um mecanismo único de log, e como quem precisa dele o obtém?
 
-Use busca paralela e leia só o necessário: o objetivo é classificar, não auditar.
+Use busca paralela e leia só o necessário: o objetivo é classificar, não auditar. A amostra de
+código dos padrões transversais é a única leitura em profundidade desta etapa — mantenha-a pequena.
 
 ### 3. Classificar confiança (obrigatório)
 
@@ -73,6 +84,12 @@ Temas que normalmente não são detectáveis e quase sempre viram pergunta:
 - Threshold de cobertura, quando o projeto não define um (sugira um valor e peça confirmação)
 - Convenção de commit/branch/PR, quando não houver `commitlint`, hook ou template
 - Padrão arquitetural, quando a estrutura for ambígua
+
+Os **padrões transversais** (tratamento de erro, injeção de dependência, roteamento, logging) são
+caso à parte: você os inferiu lendo código, não um manifesto, então a confiança é menor. Apresente
+o que inferiu de cada um, com o arquivo que serviu de evidência, e peça confirmação — mesmo quando
+a inferência parecer clara. Se o projeto for pequeno ou novo demais para demonstrar um padrão,
+registre "sem padrão formal" em vez de deduzir um a partir de um único exemplo.
 
 <critical>NÃO PERGUNTE o que você já detectou com confiança. Apresente como fato a confirmar, em bloco, no fim.</critical>
 
