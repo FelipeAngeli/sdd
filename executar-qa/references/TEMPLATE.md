@@ -7,64 +7,80 @@
 - Total de Requisitos: [X]
 - Requisitos Atendidos: [Y]
 - Bugs Encontrados: [Z]
-- Issue do Linear: [LIG-XXX ou "sem issue"]
+- Issue vinculada: [identificador no rastreador configurado ou "sem issue"]
 
-## Gate automatizado (`make ci`)
+## Gate automatizado
+[Uma linha por comando de `<comandos_projeto>`.]
+
 | Etapa | Comando | Resultado |
 |-------|---------|-----------|
-| Formatação | `make format-check` | OK / NOK — [arquivos desformatados] |
-| Análise estática | `make analyze` | [N] issues (esperado: 0) |
-| Cobertura | `make coverage` | `Lines: [hit]/[total] ([X]%)` — gate 90% OK / FAIL |
+| Format | [comando do config] | OK / NOK — [arquivos desformatados] |
+| Lint | [comando do config] | [N] issues (esperado: 0) |
+| Testes | [comando do config] | TODOS PASSANDO / [N] falhando |
+| Cobertura | [comando do config] | [resultado] — threshold [X]% OK / FAIL |
 
 > Gate reprovado bloqueia o QA.
 
-## Golden tests
-| Tela | Light | Dark | Observações |
-|------|-------|------|-------------|
-| [nome da tela] | PASSOU/FALHOU/AUSENTE | PASSOU/FALHOU/AUSENTE | [obs] |
+## Segurança
+| Verificação | Resultado | Observações |
+|-------------|-----------|-------------|
+| Scanner de dependências vulneráveis | [comando] — [N] achados (alta/crítica: [N]) | [obs] |
+| Baseline de segurança (`_shared/SECURITY_BASELINE.md`) | OK / [N] desvios | [obs] |
+| Extensões de `<seguranca_extensoes>` | OK / [N] desvios | [obs] |
 
-> Comando: `flutter test --tags golden`. Golden ausente para página nova = bug Alta.
-> Goldens não rodam no CI (excluídos no Linux) — este gate é local no macOS.
+> Achado de severidade alta ou crítica reprova o QA e vira bug.
 
-## Integration tests (`integration_test/`)
-- Device utilizado: [id do emulador/device ou "nenhum disponível"]
-- Flavor: [dev / homolog / prod]
+## Validação visual
+[Preencher apenas se `<ui_projeto>` declarar ferramenta de validação visual.]
 
-| Alvo | Cenário | Flavor | Resultado | Escreveu no DEV? |
-|------|---------|--------|-----------|------------------|
-| `make e2e-[feature]` | [cenário coberto] | [dev] | PASSOU/FALHOU/NÃO EXECUTADO | sim/não |
+| Tela | Variações verificadas | Resultado | Observações |
+|------|-----------------------|-----------|-------------|
+| [nome da tela] | [ex.: temas suportados] | PASSOU/FALHOU/AUSENTE | [obs] |
 
-> Se não executado, registrar o motivo (ex.: sem device disponível) como pendência explícita.
-> Alvos que escrevem no DEV (`e2e-help-safety`, `e2e-lost-items`) exigem confirmação prévia do usuário.
+> Comando: [comando do config]. Ausência de validação visual para tela nova = bug de severidade Alta.
+
+## Testes ponta a ponta
+- Ambiente/dispositivo utilizado: [descrição ou "nenhum disponível"]
+
+| Alvo | Cenário | Resultado | Escreveu em ambiente compartilhado? |
+|------|---------|-----------|--------------------------------------|
+| [comando do config] | [cenário coberto] | PASSOU/FALHOU/NÃO EXECUTADO | sim/não |
+
+> Se não executado, registre o motivo como pendência explícita — não reprove por isso.
+> Alvos que escrevem em ambiente compartilhado exigem confirmação prévia do usuário.
 
 ## Requisitos Verificados
 | ID | Requisito | Status | Evidência |
 |----|-----------|--------|-----------|
-| RF-01 | [descrição] | PASSOU/FALHOU | [screenshot em evidences/] |
+| RF-01 | [descrição] | PASSOU/FALHOU | [evidência na pasta de evidências] |
 
-## Fluxos testados no app
+## Fluxos testados
 | Fluxo | Estados verificados | Resultado | Observações |
 |-------|---------------------|-----------|-------------|
-| [fluxo] | carregando / vazio / erro / offline | PASSOU/FALHOU | [obs] |
+| [fluxo] | carregando / vazio / erro / sem conexão | PASSOU/FALHOU | [obs] |
 
 ## Acessibilidade
+[Preencher apenas se `<ui_projeto>` indicar acessibilidade aplicável.]
+
 | Verificação | Resultado | Observações |
 |-------------|-----------|-------------|
-| Rótulos em elementos interativos (`Semantics` / `semanticLabel` / `labelText`) | OK / NOK | [obs] |
-| Leitor de tela (TalkBack / VoiceOver) | OK / NOK | [obs] |
-| Contraste em tema claro e escuro | OK / NOK | [obs] |
-| Alvos de toque | OK / NOK | [obs] |
-| Escala de fonte até 2.0 sem quebra de layout | OK / NOK | [obs] |
+| Rótulo descritivo em elementos interativos | OK / NOK | [obs] |
+| Leitor de tela anuncia corretamente | OK / NOK | [obs] |
+| Contraste adequado em todos os temas suportados | OK / NOK | [obs] |
+| Alvo de interação com tamanho mínimo | OK / NOK | [obs] |
+| Layout suporta aumento de escala de fonte | OK / NOK | [obs] |
+| Navegação por teclado e ordem de foco | OK / NOK | [obs] |
 | Mensagens de erro associadas ao campo correto | OK / NOK | [obs] |
 
-## Verificação visual
-| Tela | node-id do Figma | Aderência ao design | Observações |
-|------|------------------|---------------------|-------------|
-| [tela] | [node-id ou —] | OK / divergente | [obs] |
+## Verificação visual comparativa
+[Preencher apenas se `<integracoes_projeto>` indicar ferramenta de design.]
 
-- Tamanhos de tela verificados: [pequena / grande]
-- Orientações verificadas: [retrato / paisagem]
-- Temas verificados: claro e escuro
+| Tela | Referência de design | Aderência | Observações |
+|------|----------------------|-----------|-------------|
+| [tela] | [identificador ou —] | OK / divergente | [obs] |
+
+- Tamanhos de tela verificados: [lista]
+- Temas verificados: [lista]
 
 ## Bugs Encontrados
 | ID | Descrição | Severidade | Evidência |
@@ -72,7 +88,7 @@
 | BUG-01 | [descrição] | Alta/Média/Baixa | [link] |
 
 ## Pendências
-[Itens não verificados e o motivo — ex.: integration test não executado por falta de device]
+[Itens não verificados e o motivo.]
 
 ## Conclusão
 [Parecer final do QA]
