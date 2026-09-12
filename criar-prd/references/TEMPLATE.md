@@ -60,7 +60,9 @@ por tela:
 
 ## Experiência do usuário
 
-[Descreva a jornada e a experiência do usuário:
+[Preencha esta seção apenas se `<ui_projeto>` indicar que o projeto tem interface de usuário final. Se não tiver, escreva "não aplicável — ver 'Plataforma alvo' para os consumidores e contratos" e siga para a próxima seção.
+
+Descreva a jornada e a experiência do usuário:
 
 - Personas e necessidades
 - Fluxos principais e interações

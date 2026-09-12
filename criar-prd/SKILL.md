@@ -121,7 +121,7 @@ Crie um plano de desenvolvimento do PRD incluindo:
 - **Usuários e histórias**: usuários principais, histórias de usuário, fluxos principais
 - **Funcionalidade principal**: entradas/saídas de dados, ações
 - **Escopo e planejamento**: o que não entra, dependências
-- **Design e experiência**: diretrizes de UI/UX, tema claro e escuro, acessibilidade
+- **Design e experiência** (quando `<ui_projeto>` indicar interface de usuário final): diretrizes de UI/UX, tema claro e escuro, acessibilidade
 - **Plataforma**: conforme `<ui_projeto>` — o comportamento é consistente entre os
   ambientes/plataformas alvo? permissões? estados offline? formas de entrada alternativas?
 
