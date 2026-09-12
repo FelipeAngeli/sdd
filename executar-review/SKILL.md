@@ -197,7 +197,7 @@ achados pela ferramenta indicada no config. Caso contrário, pule esta etapa.
 - [ ] Convenção de commit/branch/PR de `<colaboracao_projeto>` respeitada
 - [ ] Code smells verificados
 - [ ] Documentação verificada, quando `<documentacao_projeto>` indicar registro obrigatório
-- [ ] Relatório final gerado em `./tasks/prd-[nome-da-funcionalidade]/codereview.md`
+- [ ] Relatório final gerado em `./tasks/prd-[nome-da-funcionalidade]/codereview.md` (conforme `<artefatos_sdd>`)
 - [ ] Comentário postado na issue do rastreador configurado (se houver)
 
 ## Critérios de Aprovação

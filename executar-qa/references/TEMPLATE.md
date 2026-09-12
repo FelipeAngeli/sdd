@@ -71,7 +71,15 @@
 | Layout suporta aumento de escala de fonte | OK / NOK | [obs] |
 | Navegação por teclado e ordem de foco | OK / NOK | [obs] |
 | Mensagens de erro associadas ao campo correto | OK / NOK | [obs] |
-| i18n: strings vêm do mecanismo declarado (sem texto fixo), layout suporta texto mais longo | OK / NOK / N/A | [obs] |
+
+## Internacionalização (i18n)
+[Preencher apenas se `<ui_projeto>` indicar i18n aplicável — independe de acessibilidade ser aplicável.]
+
+| Verificação | Resultado | Observações |
+|-------------|-----------|-------------|
+| Strings de interface vêm do mecanismo declarado, sem texto fixo no código | OK / NOK | [obs] |
+| Layout suporta textos mais longos após tradução | OK / NOK | [obs] |
+| Formatos de data, número e moeda seguem a localidade | OK / NOK | [obs] |
 
 ## Verificação visual comparativa
 [Preencher apenas se `<integracoes_projeto>` indicar ferramenta de design.]

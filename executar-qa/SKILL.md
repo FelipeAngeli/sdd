@@ -140,9 +140,11 @@ Para cada requisito:
 Verifique também, quando aplicável: comportamento sem conectividade, negação de permissão, e
 retorno do fluxo após interrupção.
 
-### 7. Verificação de Acessibilidade (quando `<ui_projeto>` indicar que é aplicável)
+### 7. Verificação de Acessibilidade e i18n (quando `<ui_projeto>` indicar acessibilidade **ou** i18n aplicável)
 
-Verificar para cada tela/componente:
+Verificar para cada tela/componente, incluindo apenas os itens cuja condição se aplica:
+
+Itens de acessibilidade — verifique quando `<ui_projeto>` indicar acessibilidade aplicável:
 
 - [ ] Elementos interativos têm rótulo descritivo
 - [ ] Leitor de tela anuncia o conteúdo corretamente
@@ -152,13 +154,17 @@ Verificar para cada tela/componente:
 - [ ] Ordem de foco/travessia faz sentido
 - [ ] Navegação por teclado cobre todos os controles interativos
 - [ ] Mensagens de erro são claras, associadas ao campo correto e acessíveis ao leitor de tela
-- [ ] Se `<ui_projeto>` indicar i18n aplicável: strings de interface vêm do mecanismo de i18n
-      declarado, sem texto fixo no código, e o layout suporta textos mais longos após tradução
+Itens de i18n — verifique quando `<ui_projeto>` indicar i18n aplicável, **mesmo que acessibilidade
+não seja aplicável**:
+
+- [ ] Strings de interface vêm do mecanismo de i18n declarado, sem texto fixo no código
+- [ ] O layout suporta textos mais longos após tradução, sem quebra nem truncamento
+- [ ] Formatos sensíveis a idioma/região (data, número, moeda) seguem a localidade do usuário
 
 Use as ferramentas/guidelines de acessibilidade da stack, quando `<stack_projeto>` ou
 `<comandos_projeto>` indicarem alguma.
 
-Se `<ui_projeto>` não indicar acessibilidade aplicável, pule esta etapa.
+Se `<ui_projeto>` não indicar nem acessibilidade nem i18n aplicável, pule esta etapa inteira.
 
 ### 8. Verificação visual comparativa (quando `<ui_projeto>` indicar interface de usuário final e `<integracoes_projeto>` indicar ferramenta de design ativa)
 
@@ -192,7 +198,7 @@ ferramenta indicada no config. Caso contrário, pule esta etapa.
 - [ ] Todos os fluxos principais testados, incluindo estados vazio/erro/sem conexão
 - [ ] Acessibilidade verificada, quando `<ui_projeto>` indicar que é aplicável
 - [ ] Evidências capturadas na pasta declarada em `<artefatos_sdd>`
-- [ ] Comparação com o design feita, quando `<integracoes_projeto>` indicar ferramenta de design
+- [ ] Comparação com o design feita, quando `<ui_projeto>` indicar interface de usuário final e `<integracoes_projeto>` indicar ferramenta de design
 - [ ] Bugs documentados em `bugs.md` (se houver)
 - [ ] Relatório final gerado em `qa.md`
 - [ ] Comentário postado na issue do rastreador configurado (se houver)
