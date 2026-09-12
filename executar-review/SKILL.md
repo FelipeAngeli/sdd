@@ -40,17 +40,17 @@ Você é um assistente especializado em Code Review de aplicações de qualquer 
 
 ## Localização dos arquivos
 
-- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md`
-- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md`
-- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md`
-- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md`
-- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md`
-- Relatório de Code Review: `./tasks/prd-[nome-da-funcionalidade]/codereview.md`
+- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md` (conforme `<artefatos_sdd>`)
+- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md` (conforme `<artefatos_sdd>`)
+- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md` (conforme `<artefatos_sdd>`)
+- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md` (conforme `<artefatos_sdd>`)
+- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md` (conforme `<artefatos_sdd>`)
+- Relatório de Code Review: `./tasks/prd-[nome-da-funcionalidade]/codereview.md` (conforme `<artefatos_sdd>`)
 - Evidências: pasta de evidências declarada em `<artefatos_sdd>`
 
 Utilize o `nome-da-funcionalidade` como o <prd>
 
-<critical>SEMPRE salve o relatório final em `./tasks/prd-[nome-da-funcionalidade]/codereview.md`</critical>
+<critical>SEMPRE salve o relatório final em `./tasks/prd-[nome-da-funcionalidade]/codereview.md` (conforme `<artefatos_sdd>`)</critical>
 
 ## Etapas do Processo
 

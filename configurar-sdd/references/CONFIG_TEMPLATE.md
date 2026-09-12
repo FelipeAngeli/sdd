@@ -29,7 +29,7 @@ Scanner de vulnerabilidade de dependências: [ex.: pnpm audit]
 Rastreador de issues: [Linear | Jira | GitHub Issues | nenhum] — como acessar: [ex.: MCP do Linear; ou "não disponível"]
 Ferramenta de design: [Figma | nenhuma] — como acessar: [ex.: MCP do Figma]
 Base de conhecimento externa: [ex.: Obsidian, Notion; ou nenhuma]
-Orquestrador/roteamento de modelo: [descreva se existir; ou "nenhum"]
+Outras integrações relevantes: [ex.: ferramenta de observabilidade, serviço de notificação; ou "nenhuma"]
 </integracoes_projeto>
 
 <ui_projeto>

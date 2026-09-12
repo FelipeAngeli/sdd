@@ -69,7 +69,7 @@ Faça perguntas para entender:
 
 - Problema a resolver
 - Funcionalidade principal
-- Restrições
+- Restrições, inclusive de segurança e conformidade — confira contra `<baseline_seguranca>`
 - O que **NÃO está no escopo**
 - Comportamento específico da plataforma, conforme `<ui_projeto>`:
   - **mobile**: funciona offline? exige permissão do sistema? entra por deep link ou
@@ -113,7 +113,7 @@ Crie um plano de desenvolvimento do PRD incluindo:
 - Esclarecer antes de planejar; planejar antes de redigir
 - Minimizar ambiguidade; preferir afirmações mensuráveis
 - O PRD define resultados e restrições, **não implementação**
-- Sempre considerar usabilidade e acessibilidade da plataforma declarada em `<ui_projeto>`
+- Considerar usabilidade e acessibilidade quando `<ui_projeto>` indicar interface de usuário final
 
 ## Checklist de perguntas de esclarecimento
 

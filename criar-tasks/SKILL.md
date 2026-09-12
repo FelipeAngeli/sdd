@@ -60,6 +60,7 @@ A funcionalidade em que você trabalhará é identificada por este slug:
 - Criar um arquivo para cada tarefa principal
 - Detalhar subtarefas e critérios de sucesso
 - Detalhar os testes por nível, conforme os níveis declarados em `<stack_projeto>` e usados na "Abordagem de testes" da <techspec>
+- Ao distribuir os casos de teste entre as tarefas, conferir contra `<baseline_qualidade>`, seção "Qualidade dos testes"
 
 ## Ordem de sequenciamento
 

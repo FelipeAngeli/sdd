@@ -44,11 +44,11 @@ Você é um QA especializado em validar a qualidade de aplicações de qualquer 
 
 ## Localização dos arquivos
 
-- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md`
-- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md`
-- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md`
-- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md`
-- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md`
+- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md` (conforme `<artefatos_sdd>`)
+- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md` (conforme `<artefatos_sdd>`)
+- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md` (conforme `<artefatos_sdd>`)
+- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md` (conforme `<artefatos_sdd>`)
+- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md` (conforme `<artefatos_sdd>`)
 - Evidências: pasta de evidências declarada em `<artefatos_sdd>`
 
 Utilize o `nome-da-funcionalidade` como o <prd>
@@ -100,7 +100,8 @@ Use o método declarado em `<ui_projeto>`, conforme o tipo de produto:
 - **Produto sem interface** (API, serviço, CLI): não há validação visual — pule esta etapa
 
 Toda tela nova da feature precisa ter teste/evidência visual nas variações que o projeto suportar
-(temas, tamanhos). Ausência de validação visual para tela nova é **bug de severidade Alta**.
+(temas, tamanhos). Quando `<ui_projeto>` indicar ferramenta de validação visual, ausência de
+validação visual para tela nova é **bug de severidade Alta**.
 
 **Nunca** regenere ou aceite artefato de teste visual como "correção" de uma falha sem aprovação
 explícita do usuário — isso apaga a evidência da regressão.
@@ -151,13 +152,15 @@ Verificar para cada tela/componente:
 - [ ] Ordem de foco/travessia faz sentido
 - [ ] Navegação por teclado cobre todos os controles interativos
 - [ ] Mensagens de erro são claras, associadas ao campo correto e acessíveis ao leitor de tela
+- [ ] Se `<ui_projeto>` indicar i18n aplicável: strings de interface vêm do mecanismo de i18n
+      declarado, sem texto fixo no código, e o layout suporta textos mais longos após tradução
 
 Use as ferramentas/guidelines de acessibilidade da stack, quando `<stack_projeto>` ou
 `<comandos_projeto>` indicarem alguma.
 
 Se `<ui_projeto>` não indicar acessibilidade aplicável, pule esta etapa.
 
-### 8. Verificação visual comparativa (quando `<integracoes_projeto>` indicar ferramenta de design ativa)
+### 8. Verificação visual comparativa (quando `<ui_projeto>` indicar interface de usuário final e `<integracoes_projeto>` indicar ferramenta de design ativa)
 
 - Comparar as telas com a referência de design indicada na TechSpec, usando a ferramenta de
   `<integracoes_projeto>` (ex.: Figma)
@@ -166,7 +169,7 @@ Se `<ui_projeto>` não indicar acessibilidade aplicável, pule esta etapa.
 - Verificar todos os temas suportados
 - Documentar inconsistências visuais encontradas
 
-Se `<integracoes_projeto>` não indicar ferramenta de design ativa, pule esta etapa.
+Se `<ui_projeto>` não indicar interface de usuário final ou `<integracoes_projeto>` não indicar ferramenta de design ativa, pule esta etapa.
 
 ### 9. Relatório de QA (Obrigatório)
 

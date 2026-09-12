@@ -71,6 +71,7 @@
 | Layout suporta aumento de escala de fonte | OK / NOK | [obs] |
 | Navegação por teclado e ordem de foco | OK / NOK | [obs] |
 | Mensagens de erro associadas ao campo correto | OK / NOK | [obs] |
+| i18n: strings vêm do mecanismo declarado (sem texto fixo), layout suporta texto mais longo | OK / NOK / N/A | [obs] |
 
 ## Verificação visual comparativa
 [Preencher apenas se `<integracoes_projeto>` indicar ferramenta de design.]

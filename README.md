@@ -1,7 +1,7 @@
 # SDD — Fluxo de desenvolvimento orientado a especificação
 
 Um bundle de skills portátil. Coloque em qualquer projeto, peça para a IA se adaptar, e o fluxo
-PRD → TechSpec → Tasks → Execução → QA → Review → Bugfix passa a funcionar com a stack, as
+PRD → TechSpec → Tasks → Execução → QA → Bugfix → Review passa a funcionar com a stack, as
 convenções e as integrações daquele projeto.
 
 ## Como usar em um projeto novo

@@ -33,6 +33,8 @@ a este arquivo — nunca o substituem. Este arquivo não deve ser editado por pr
 - [ ] Caminhos de arquivo derivados de entrada são normalizados e restritos (evita path traversal)
 - [ ] Requisições a URLs derivadas de entrada são restritas a destinos permitidos (evita SSRF)
 - [ ] Desserialização de dados não confiáveis usa formato e tipos restritos
+- [ ] Requisições que alteram estado exigem token CSRF ou verificação de origem equivalente
+      (ex.: cookie SameSite, checagem de Origin/Referer)
 
 ## Autenticação e autorização
 
@@ -41,12 +43,16 @@ a este arquivo — nunca o substituem. Este arquivo não deve ser editado por pr
 - [ ] Identificadores previsíveis não dão acesso a recurso de outro usuário (referência direta
       insegura a objeto)
 - [ ] Sessão/token tem expiração e é invalidado no logout
+- [ ] Autenticação tem limite de tentativas / rate limiting contra força bruta e enumeração de
+      usuário
 
 ## Dados sensíveis
 
 - [ ] Dados pessoais, credenciais e tokens nunca aparecem em log em texto claro
 - [ ] Dados sensíveis em repouso usam o armazenamento seguro da plataforma
 - [ ] Tráfego sensível trafega criptografado
+- [ ] Senha é armazenada com hash de algoritmo de derivação lento e salt (ex.: bcrypt, scrypt,
+      Argon2) — nunca criptografia caseira nem hash rápido sem salt
 - [ ] Mensagens de erro expostas ao usuário não vazam detalhe interno (stack trace, query, caminho)
 
 ## Configuração segura

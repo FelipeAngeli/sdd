@@ -31,12 +31,12 @@ Você é um desenvolvedor de alto nível especializado na correção de defeitos
 
 ## Localização dos arquivos
 
-- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md`
-- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md`
-- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md`
-- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md`
-- Relatório de Correções: `./tasks/prd-[nome-da-funcionalidade]/bugfixes.md`
-- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md`
+- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md` (conforme `<artefatos_sdd>`)
+- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md` (conforme `<artefatos_sdd>`)
+- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md` (conforme `<artefatos_sdd>`)
+- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md` (conforme `<artefatos_sdd>`)
+- Relatório de Correções: `./tasks/prd-[nome-da-funcionalidade]/bugfixes.md` (conforme `<artefatos_sdd>`)
+- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md` (conforme `<artefatos_sdd>`)
 - Evidências: pasta de evidências declarada em `<artefatos_sdd>`
 
 Utilize o `nome-da-funcionalidade` como o <prd>
@@ -103,6 +103,8 @@ Para bugs que afetam a interface:
 3. Verifique os estados vazio/carregando/erro e os temas que o projeto tiver
 4. Capture evidência na pasta de evidências de `<artefatos_sdd>`
 5. Só depois de o usuário aprovar a nova aparência, regenere o artefato de teste visual
+6. Se `<integracoes_projeto>` indicar uma ferramenta de design ativa e houver referência de
+   design para a tela afetada, compare o resultado da correção com o design
 
 Se `<ui_projeto>` não indicar ferramenta de validação visual, pule esta etapa.
 
