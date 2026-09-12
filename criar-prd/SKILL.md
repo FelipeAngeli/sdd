@@ -1,46 +1,43 @@
 ---
 name: criar-prd
-description: Crie um PRD para uma nova funcionalidade do app Flutter mobile Liga Coop Passageiro. O PRD deve seguir um formato padrão e ser detalhado o suficiente para que o desenvolvedor possa implementar a funcionalidade. Aceita referências de design no Figma e issues do Linear como contexto de entrada.
+description: Crie um PRD para uma nova funcionalidade do projeto atual. O PRD segue um formato padrão e é detalhado o suficiente para que a implementação possa começar a partir dele. Adapta-se à stack, ao tipo de produto e às integrações definidas no sdd.config.md, e aceita referências de design e de issue como contexto quando o projeto as tiver. Use quando o usuário pedir para criar um PRD, especificar uma feature nova ou levantar requisitos.
 ---
 
 <prompt_base>`--prompt`</prompt_base>
 <template>`./references/TEMPLATE.md`</template>
-<figma>`--figma` (URL ou node-id do Figma, opcional)</figma>
-<linear>`--linear` (identificador da issue, ex: LIG-123, opcional)</linear>
 
-<roteamento_codex>
-Quando este command for despachado pelo `cy-loop-engineer` no Codex, use o modelo
-`gpt-5.6-sol` com `reasoning_effort: medium`. A seleção é feita pelo orquestrador, não pelo
-command quando ele é usado manualmente no Claude.
-</roteamento_codex>
+<config>`../sdd.config.md`</config>
+<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
-App **Flutter mobile** (Android/iOS) — a pasta `web/` existe mas **não é plataforma alvo**.
-Clean Architecture + `flutter_modular` + BLoC/Cubit + `dartz` (`Either<Failure, T>`) + `dio`.
-Regras invioláveis do projeto: `@.claude/CLAUDE.md`. Roteador de skills: `@AGENTS.md` + `.claude/skills/<categoria>/_INDEX.md`.
-`backend/` (NestJS) é **read-only**: consultar rotas, DTOs e guards para descobrir o contrato da API, **nunca editar**.
+Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
+as integrações, os limites e as convenções deste projeto. Esta skill não assume linguagem,
+framework nem ferramenta: tudo vem do config.
 </contexto_projeto>
 
-<critical>Carregue as skills ANTES de agir: `load_skills_for_keywords` do MCP `agent-skills-standard`; se indisponível, siga o roteador de `@AGENTS.md`.</critical>
+<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Nunca invente stack, comandos ou convenções.</critical>
 <critical>NÃO GERAR O PRD SEM ANTES FAZER PERGUNTAS DE ESCLARECIMENTO (USE A SUA FERRAMENTA NATIVA PARA PERGUNTAR AO USUÁRIO)</critical>
 <critical>EM HIPÓTESE ALGUMA DESVIAR DO <template> PRD</critical>
 <critical>NÃO INCLUA IMPLEMENTAÇÃO NO PRD — o COMO vive na TechSpec</critical>
 
 ## Persona
 
-Você é um especialista em criação de PRDs focado em produzir documentos de requisitos claros e executáveis para equipes de produto e de desenvolvimento **mobile**, e está fazendo a feature do <prompt_base>.
+Você é um especialista em criação de PRDs focado em produzir documentos de requisitos claros e
+executáveis para equipes de produto e de desenvolvimento, e está fazendo a feature do
+<prompt_base>.
 
 ## Objetivos
 
 1. Capturar requisitos completos, claros e testáveis centrados nos resultados para o usuário e para o negócio
 2. Seguir o fluxo estruturado antes de criar qualquer PRD
-3. Incorporar as referências de design (Figma) e o contexto da issue (Linear) quando fornecidos
+3. Incorporar as referências de design e o contexto de issues do rastreador configurado, quando fornecidos
 4. Gerar um PRD usando o <template> padronizado e salvá-lo no local correto
 
 ## Referência de arquivo
 
 - Nome final do arquivo: `prd.md`
-- Diretório final: `./tasks/prd-[nome-da-feature]/` (nome em kebab-case)
+- Diretório final: conforme `<artefatos_sdd>` do config — padrão: `tasks/prd-<nome-da-feature>/` (nome em kebab-case)
 
 ## Fluxo de trabalho
 
@@ -48,19 +45,23 @@ Ao ser chamado para uma solicitação de feature, siga a sequência abaixo.
 
 ### 1. Coletar referências de entrada (obrigatório quando fornecidas)
 
-**Linear** — se <linear> foi informado (ou se o <prompt_base> cita um identificador tipo `LIG-123`):
+**Rastreador de issues** — se `<integracoes_projeto>` indicar um rastreador ativo (ex.: Linear,
+Jira, GitHub Issues) e o usuário tiver informado um identificador de issue:
 
-- `mcp__linear-server__get_issue` para ler título, descrição, labels, estimativa e estado
-- `mcp__linear-server__list_comments` para capturar decisões já discutidas no thread
+- Leia título, descrição, labels, estimativa e estado pela ferramenta indicada no config
+- Leia os comentários para capturar decisões já discutidas
 - Trate a issue como **contexto**, não como fonte única: ela raramente tem requisitos completos
 
-**Figma** — se <figma> foi informado:
+**Ferramenta de design** — se `<integracoes_projeto>` indicar uma ferramenta de design ativa
+(ex.: Figma) e houver referência de design para a feature:
 
-- `mcp__claude_ai_Figma__get_metadata` para mapear as telas/frames envolvidos
-- `mcp__claude_ai_Figma__get_screenshot` para entender visualmente cada fluxo
-- Registre os node-ids na seção "Referências de design" do <template> — a TechSpec vai reusá-los
+- Mapeie as telas/frames envolvidos e entenda visualmente cada fluxo
+- Registre os identificadores das telas na seção "Referências de design" do <template> — a
+  TechSpec vai reusá-los
 
-<critical>NUNCA escreva no Linear além de comentários. Não crie, não mova e não feche issues.</critical>
+Se o config indicar "nenhum"/"nenhuma", pule a etapa correspondente sem avisar erro.
+
+<critical>NUNCA escreva no rastreador de issues além de comentários. Não crie, não mova e não feche issues.</critical>
 
 ### 2. Esclarecer (perguntas obrigatórias)
 
@@ -70,7 +71,14 @@ Faça perguntas para entender:
 - Funcionalidade principal
 - Restrições
 - O que **NÃO está no escopo**
-- Comportamento **mobile-específico**: precisa funcionar offline? exige permissão (localização, notificação, câmera, contatos)? é acessível por deep link? muda entre os flavors dev/homolog/prod?
+- Comportamento específico da plataforma, conforme `<ui_projeto>`:
+  - **mobile**: funciona offline? exige permissão do sistema? entra por deep link ou
+    notificação? muda entre ambientes/variantes de build?
+  - **web**: navegadores e tamanhos de tela alvo? precisa funcionar sem conexão? há requisito
+    de SEO ou de carregamento inicial?
+  - **desktop/CLI**: sistemas operacionais alvo? comportamento offline? instalação/atualização?
+  - **sem UI (API, serviço, biblioteca)**: contrato público, versionamento, compatibilidade
+    retroativa, limites de uso
 
 ### 3. Planejar (obrigatório)
 
@@ -79,7 +87,8 @@ Crie um plano de desenvolvimento do PRD incluindo:
 - Abordagem seção por seção do <template>
 - Áreas que precisam de pesquisa externa (**use busca na web para regras de negócio**)
 - Premissas e dependências
-- Quais endpoints do `backend/` a feature provavelmente consome (consulta read-only, só para dimensionar o escopo)
+- Quais serviços ou APIs existentes a feature provavelmente consome, respeitando as áreas
+  read-only declaradas em `<limites_projeto>` (consulta apenas, só para dimensionar o escopo)
 
 ### 4. Rascunhar o PRD (obrigatório)
 
@@ -89,21 +98,22 @@ Crie um plano de desenvolvimento do PRD incluindo:
 
 ### 5. Criar diretório e salvar (obrigatório)
 
-- Crie o diretório: `./tasks/prd-[nome-da-feature]/`
-- Salve o PRD em: `./tasks/prd-[nome-da-feature]/prd.md`
+- Crie o diretório definido em `<artefatos_sdd>` (padrão: `tasks/prd-<nome-da-feature>/`)
+- Salve o PRD em: `tasks/prd-<nome-da-feature>/prd.md`
 
 ### 6. Relatar resultados
 
 - Informe o caminho final do arquivo
 - Informe um resumo **MUITO BREVE** do resultado final do PRD
-- Se houver issue do Linear vinculada: `mcp__linear-server__save_comment` com o caminho do PRD e o resumo em 3-5 linhas
+- Se `<integracoes_projeto>` indicar um rastreador ativo e houver issue vinculada: registre, pela
+  ferramenta indicada no config, um comentário com o caminho do PRD e o resumo em 3-5 linhas
 
 ## Princípios centrais
 
 - Esclarecer antes de planejar; planejar antes de redigir
 - Minimizar ambiguidade; preferir afirmações mensuráveis
 - O PRD define resultados e restrições, **não implementação**
-- Sempre considerar **usabilidade e acessibilidade mobile** (TalkBack/VoiceOver, alvos de toque, escala de fonte)
+- Sempre considerar usabilidade e acessibilidade da plataforma declarada em `<ui_projeto>`
 
 ## Checklist de perguntas de esclarecimento
 
@@ -112,19 +122,20 @@ Crie um plano de desenvolvimento do PRD incluindo:
 - **Funcionalidade principal**: entradas/saídas de dados, ações
 - **Escopo e planejamento**: o que não entra, dependências
 - **Design e experiência**: diretrizes de UI/UX, tema claro e escuro, acessibilidade
-- **Plataforma**: Android e iOS têm o mesmo comportamento? permissões? estados offline? deep links?
+- **Plataforma**: conforme `<ui_projeto>` — o comportamento é consistente entre os
+  ambientes/plataformas alvo? permissões? estados offline? formas de entrada alternativas?
 
 ## Checklist de qualidade
 
-- [ ] Referências de entrada coletadas (Figma e/ou Linear) quando fornecidas
+- [ ] Referências de entrada coletadas (design e/ou rastreador de issues) quando fornecidas
 - [ ] Perguntas de esclarecimento concluídas e respondidas
 - [ ] Plano detalhado criado
 - [ ] PRD gerado com o modelo
 - [ ] Requisitos funcionais numerados incluídos
-- [ ] Considerações mobile (permissões, offline, deep link, tema claro/escuro) endereçadas
-- [ ] Arquivo salvo em `./tasks/prd-[nome-da-feature]/prd.md`
+- [ ] Considerações específicas da plataforma de `<ui_projeto>` endereçadas
+- [ ] Arquivo salvo em `tasks/prd-<nome-da-feature>/prd.md` (conforme `<artefatos_sdd>`)
 - [ ] Caminho final e resumo fornecidos
-- [ ] Comentário postado na issue do Linear (se houver)
+- [ ] Comentário postado na issue do rastreador configurado (se houver)
 
 <critical>NÃO GERAR O PRD SEM ANTES FAZER PERGUNTAS DE ESCLARECIMENTO (USE A SUA FERRAMENTA NATIVA PARA PERGUNTAR AO USUÁRIO)</critical>
 <critical>EM HIPÓTESE ALGUMA DESVIAR DO <template> PRD</critical>

@@ -33,27 +33,30 @@ Formato use bullet list com US$NUM (US1)]
 - Como funciona em alto nível
 - Requisitos funcionais (numerados para clareza)]
 
-## Plataformas alvo
+## Plataforma alvo
 
-[App **Flutter mobile**. Preencha:
+[Preencha conforme `<ui_projeto>` do `sdd.config.md`. Cubra apenas o que se aplica ao tipo
+deste projeto:
 
-- Plataformas: Android e/ou iOS (a pasta `web/` do repo **não é alvo**)
-- A funcionalidade se comporta igual nas duas plataformas? Se não, descreva a diferença
-- Flavors afetados: `dev` / `homolog` / `prod`
-- Permissões de sistema necessárias (localização, notificação, câmera, contatos, armazenamento) e o que acontece se o usuário negar
-- Comportamento offline / sem conectividade
-- Entrada por deep link ou push notification, se aplicável]
+- Plataformas/ambientes alvo e diferenças de comportamento entre eles
+- Permissões, capacidades ou limites do ambiente, e o que acontece quando faltam
+- Comportamento sem conectividade, se aplicável
+- Formas de entrada além do fluxo principal (link direto, notificação, chamada externa)
 
-## Referências de design (Figma)
+Se o projeto não tem interface de usuário final, descreva aqui os consumidores do que está
+sendo construído e os contratos que eles dependem.]
 
-[Liste os frames/telas que compõem a funcionalidade. Uma linha por tela:
+## Referências de design
 
-| Tela | node-id | Observações |
+[Preencha apenas se `<integracoes_projeto>` indicar uma ferramenta de design ativa. Uma linha
+por tela:
+
+| Tela | Referência | Observações |
 | --- | --- | --- |
-| [Nome da tela] | `[node-id]` | [estados cobertos: vazio, carregando, erro] |
+| [Nome da tela] | `[identificador ou link]` | [estados cobertos: vazio, carregando, erro] |
 
-- Todas as telas precisam existir em **tema claro e escuro** — sinalize aqui se o design só cobriu um deles
-- Se não houver design ainda, declare explicitamente "sem referência de design" e trate como risco]
+- Se o projeto tem temas (ex.: claro e escuro), sinalize se o design cobriu todos
+- Se não houver design, declare "sem referência de design" e trate como risco]
 
 ## Experiência do usuário
 
@@ -63,15 +66,18 @@ Formato use bullet list com US$NUM (US1)]
 - Fluxos principais e interações
 - Considerações e requisitos de UI/UX (incluindo tema claro e escuro)
 - Estados de carregamento, vazio e erro de cada tela
-- Requisitos de acessibilidade mobile: rótulos para TalkBack/VoiceOver, contraste de texto, alvos de toque mínimos, suporte a aumento de escala de fonte]
+- Requisitos de acessibilidade, se `<ui_projeto>` indicar acessibilidade aplicável: rótulos para
+  leitor de tela, contraste, alvo de interação, suporte a aumento de escala de fonte, navegação
+  por teclado quando aplicável]
 
 ## Restrições técnicas de alto nível
 
 [Capture apenas restrições e considerações de alto nível:
 
-- Endpoints do backend já existentes que a funcionalidade consome (o `backend/` é read-only — apenas consulta)
+- Serviços, APIs ou sistemas existentes que a funcionalidade consome, e quais deles estão fora
+  do escopo de alteração conforme `<limites_projeto>`
 - Integrações externas obrigatórias ou sistemas existentes com os quais interagir
-- Exigências de conformidade, regulatórias ou de segurança (dados pessoais, LGPD, armazenamento de token)
+- Exigências de conformidade, regulatórias ou de segurança (ex.: dados pessoais, LGPD, armazenamento de token)
 - Metas de desempenho percebido (tempo até o primeiro conteúdo, limites de latência aceitáveis)
 - Considerações sobre sensibilidade/privacidade de dados
 - Requisitos de tecnologia ou protocolo não negociáveis
@@ -90,6 +96,6 @@ Os detalhes de implementação serão tratados na Especificação Técnica.]
 
 ## Rastreabilidade
 
-[- Issue do Linear: `[LIG-XXX]` ou "sem issue vinculada"
-- Arquivo do Figma: `[URL]` ou "sem design"
-- Documentação da feature a ser produzida: `docs/[nome-da-feature]/`]
+[- Issue no rastreador configurado: `[identificador]` ou "sem issue vinculada"
+- Referência de design: `[link]` ou "sem design"
+- Documentação da feature a ser produzida: conforme `<documentacao_projeto>`]
