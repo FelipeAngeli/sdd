@@ -4,21 +4,23 @@
 
 [Descrição breve da tarefa]
 
-**Camada:** [`domain` / `data` / `presentation` / `módulo e rotas` / `integração` / `documentação`]
+**Camada:** [uma das camadas declaradas em `<stack_projeto>`]
 
-<skills>
-### Conformidade com skills
+<regras>
+### Regras e convenções aplicáveis
 
-[Pesquisar as skills aplicáveis em `.claude/skills/flutter/_INDEX.md` (File Match pelos arquivos que a tarefa toca, Keyword Match pelo tema) e listá-las abaixo. Carregar todas antes de implementar — ou usar `load_skills_for_files` do MCP `agent-skills-standard`.]
-</skills>
+[Liste as regras do projeto que esta tarefa precisa respeitar: as de `<limites_projeto>`, as
+convenções de `<qualidade_extensoes>` e de `<colaboracao_projeto>`, e as baselines de segurança
+e de qualidade do bundle SDD. Carregue tudo antes de implementar.]
+</regras>
 
 <requirements>
-[Lista de requisitos obrigatórios (usar os RFs quando aplicável)]
+[Lista de requisitos obrigatórios (usar os RFs do PRD quando aplicável)]
 </requirements>
 
 ## Subtarefas
 
-<critical>A subtarefa de teste vem SEMPRE antes da subtarefa de implementação correspondente (TDD). Para páginas, o golden test (light e dark) vem antes da página.</critical>
+<critical>A subtarefa de teste vem SEMPRE antes da subtarefa de implementação correspondente (TDD). Se `<ui_projeto>` indicar validação visual, o teste visual vem antes da tela.</critical>
 
 - [ ] X.1 [Teste falhando que descreve o comportamento esperado]
 - [ ] X.2 [Implementação mínima para o teste passar]
@@ -26,66 +28,60 @@
 
 ## Detalhes de implementação
 
-[Seções pertinentes da especificação técnica **NÃO É NECESSÁRIO MOSTRAR A IMPLEMENTAÇÃO COMPLETA, APENAS REFERENCIAR techspec.md**]
+[Seções pertinentes da especificação técnica. **NÃO REPITA A IMPLEMENTAÇÃO, APENAS REFERENCIE
+`techspec.md`**]
 
 ## Critérios de sucesso
 
 - [Resultados mensuráveis]
 - [Requisitos de qualidade]
-- [ ] `make format-check analyze test` passa
-- [ ] Cobertura da tarefa não derruba o gate de ≥90% (`make coverage`)
+- [ ] Comandos de `<comandos_projeto>` (format, lint, testes) passam
+- [ ] Cobertura não derruba o threshold declarado em `<comandos_projeto>`
 
 ## Testes da tarefa
 
-<critical>Antes de escrever ou refatorar qualquer teste, carregar `.claude/skills/flutter/flutter-test-behavior-audit/SKILL.md` (auditoria → mapa de cenários → implementação) e depois `flutter-tdd-testing`. `mocktail` é o único mock permitido. Nome no formato `should <expected> when <condition>`.</critical>
+<critical>Antes de escrever ou refatorar qualquer teste, leia a baseline de qualidade do bundle SDD, seção "Qualidade dos testes". Use a biblioteca de mock declarada em `<stack_projeto>` e nenhuma outra. O nome do teste descreve o comportamento esperado e a condição.</critical>
 
-### Testes unitários (domain / data)
+[Uma subseção por nível de teste aplicável, conforme os níveis declarados em `<stack_projeto>`
+e a estratégia definida na TechSpec. Use apenas os níveis que existem neste projeto.]
 
-- [ ] ...
-  <!-- usecase: sucesso e falha · repository: exceção → Failure correta (mocka o datasource) ·
-       datasource: DioException real com DioExceptionType correto · model: fromJson completo,
-       com campo ausente e com tipo inesperado -->
-
-### Testes de Bloc/Cubit
+### [Nível de teste — ex.: unitário]
 
 - [ ] ...
-  <!-- bloc_test por transição: carregando → sucesso · carregando → vazio · carregando → erro.
-       Usar expect: orderedEquals([...]) quando a ordem importar. -->
+  <!-- Caminho feliz e caminho de falha. Asserção no valor concreto e no tipo de erro concreto. -->
 
-### Testes de widget
-
-- [ ] ...
-  <!-- cada estado renderiza o esperado: conteúdo, vazio, erro no lugar certo, loading,
-       botão desabilitado durante envio. pumpWidget com MaterialApp + BlocProvider.
-       Sem bootstrap de Module e sem Modular.get<T>(). -->
-
-### Testes golden (obrigatório para toda página nova)
-
-- [ ] Golden em tema **claro**
-- [ ] Golden em tema **escuro**
-  <!-- Helper: pumpScreenWithTheme (test/_helpers/pump_screen_with_theme.dart), surface 390×844.
-       tags: 'golden'. Arquivos em goldens/<tela>_light.png e goldens/<tela>_dark.png ao lado do teste.
-       Escritos ANTES da implementação da página. Regenerar só com aprovação: flutter test --update-goldens.
-       Atenção: goldens são excluídos no Linux (dart_test.yaml) — o gate é local no macOS. -->
-
-### Testes de integração/E2E (se aplicável)
+### [Nível de teste — ex.: integração entre componentes]
 
 - [ ] ...
-  <!-- integration_test/[feature]/ — cenário compartilhado em integration_test/scenarios/.
-       Rodar com `make e2e-[feature] DEVICE=<id>`. Exige device + rede.
-       Declarar aqui se o teste ESCREVE dados no ambiente DEV. -->
+  <!-- Mock só na fronteira externa; a unidade sob teste continua sendo exercitada de verdade. -->
+
+### [Nível de teste — interface, se `<ui_projeto>` indicar UI]
+
+- [ ] ...
+  <!-- Cada estado renderiza o esperado: conteúdo, vazio, erro no lugar certo, carregando. -->
+
+### [Validação visual — só se `<ui_projeto>` declarar ferramenta de validação visual]
+
+- [ ] [Um item por variação exigida pelo projeto, ex.: cada tema suportado]
+  <!-- Escrito ANTES da implementação da tela. Regenerar artefato visual só com aprovação
+       explícita do usuário. -->
+
+### [Ponta a ponta, se aplicável]
+
+- [ ] ...
+  <!-- Só os fluxos principais. Declare aqui se o teste ESCREVE dados em ambiente compartilhado
+       — nesse caso, exige confirmação do usuário antes de rodar. -->
 
 ## Arquivos relevantes
 
 **Implementação**
 
-- [`lib/features/[feature]/[camada]/...`]
+- [`caminho real no projeto, conforme a estrutura de <stack_projeto>`]
 
 **Testes**
 
-- [`test/features/[feature]/[camada]/..._test.dart`]
-- [`test/features/[feature]/presentation/pages/goldens/*.png` (se houver página)]
+- [`caminho real dos testes`]
 
-**Módulo e rotas**
+**Registro e ligação** (rotas, injeção de dependência, configuração)
 
-- [`lib/features/[feature]/[feature]_module.dart`]
+- [`caminho real, se a tarefa tocar nesses pontos`]

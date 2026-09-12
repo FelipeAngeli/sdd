@@ -1,26 +1,24 @@
 ---
 name: criar-tasks
-description: Usando um PRD e um TechSpec, crie uma lista de tasks para a implementação de uma funcionalidade do app Flutter mobile Liga Coop Passageiro. As tarefas seguem a ordem das camadas Clean Architecture (domain → data → presentation → módulo/rotas → E2E), incluem TDD e golden tests, e seguem o padrão de templates fornecido.
+description: Usando um PRD e uma TechSpec, crie uma lista de tarefas para a implementação de uma funcionalidade, seguindo a ordem de dependência entre camadas definida no sdd.config.md. As tarefas incluem TDD obrigatório (teste antes da implementação) e seguem o padrão de templates fornecido. Use quando o usuário pedir para quebrar uma feature em tarefas de implementação, gerar um plano de tarefas a partir de um PRD/TechSpec ou preparar o trabalho para execução.
 ---
 
 <prd>`--prd`</prd>
 <techspec>`--techspec`</techspec>
 <tasks_template>`./references/TASKS_TEMPLATE.md`</tasks_template>
 <task_template>`./references/TASK_TEMPLATE.md`</task_template>
-<linear>`--linear` (identificador da issue, ex: LIG-123, opcional)</linear>
 
-<roteamento_codex>
-Quando este command for despachado pelo `cy-loop-engineer` no Codex, use o modelo
-`gpt-5.6-sol` com `reasoning_effort: medium`. A seleção é feita pelo orquestrador, não pelo
-command quando ele é usado manualmente no Claude.
-</roteamento_codex>
+<config>`../sdd.config.md`</config>
+<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
-App **Flutter mobile** (Android/iOS) — a pasta `web/` existe mas **não é plataforma alvo**.
-Clean Architecture + `flutter_modular` + BLoC/Cubit + `dartz` (`Either<Failure, T>`) + `dio`.
-Regras invioláveis do projeto: `@.claude/CLAUDE.md`. Roteador de skills: `@AGENTS.md` + `.claude/skills/flutter/_INDEX.md`.
-`backend/` (NestJS) é **read-only** — nenhuma tarefa pode alterá-lo.
+Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
+as integrações, os limites e as convenções deste projeto. Esta skill não assume linguagem,
+framework nem ferramenta: tudo vem do config.
 </contexto_projeto>
+
+<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Nunca invente stack, comandos ou convenções.</critical>
 
 ## Persona
 
@@ -32,28 +30,28 @@ Você é um Product Manager nível megabrain atuando com força total. Sua taref
 <critical>É ESSENCIAL QUE PARA CADA TAREFA EXISTA UM CONJUNTO DE TESTES QUE GARANTA SEU FUNCIONAMENTO E O OBJETIVO DE NEGÓCIO</critical>
 <critical>É PRECISO QUE NA TAREFA TENHAM TODOS OS TEST CASES RELACIONADOS DA <techspec></critical>
 <critical>TDD É OBRIGATÓRIO: EM TODA TAREFA A SUBTAREFA DO TESTE VEM **ANTES** DA SUBTAREFA DA IMPLEMENTAÇÃO</critical>
-<critical>TODA TAREFA QUE CRIA PÁGINA EM `lib/features/**/presentation/pages/` PRECISA DA SUBTAREFA DE GOLDEN TEST (LIGHT **E** DARK) **ANTES** DA SUBTAREFA QUE IMPLEMENTA A PÁGINA</critical>
-<critical>A ÚLTIMA TAREFA DA LISTA É SEMPRE A DOCUMENTAÇÃO DUPLA: `docs/<feature>/` NO REPO + REGISTRO ESTRATÉGICO NO CONTAINER OBSIDIAN (critical rule de `@.claude/CLAUDE.md`)</critical>
+<critical>SE `<ui_projeto>` INDICAR FERRAMENTA DE VALIDAÇÃO VISUAL, TODA TAREFA QUE CRIA UMA TELA NOVA PRECISA DA SUBTAREFA DE TESTE VISUAL **ANTES** DA SUBTAREFA QUE IMPLEMENTA A TELA</critical>
+<critical>A ÚLTIMA TAREFA DA LISTA É SEMPRE A DOCUMENTAÇÃO, CONFORME `<documentacao_projeto>` DO CONFIG. SE O CONFIG INDICAR REGISTRO EXTERNO OBRIGATÓRIO, A TAREFA COBRE OS DOIS DESTINOS</critical>
 
 ## Pré-requisitos
 
 A funcionalidade em que você trabalhará é identificada por este slug:
 
-- PRD obrigatório: `tasks/prd-[nome-da-funcionalidade]/prd.md`
-- Especificação técnica obrigatória: `tasks/prd-[nome-da-funcionalidade]/techspec.md`
+- PRD obrigatório: `tasks/prd-<nome-da-feature>/prd.md` (conforme `<artefatos_sdd>` do config)
+- TechSpec obrigatória: `tasks/prd-<nome-da-feature>/techspec.md` (conforme `<artefatos_sdd>`)
 
 ## Etapas do processo
 
 1. **Analisar PRD e especificação técnica**
 
 - Extrair requisitos e decisões técnicas
-- Identificar os principais componentes e em qual camada cada um vive
-- Extrair **todos** os casos de teste da seção "Abordagem de testes" da <techspec> — eles são a entrada direta das subtarefas de teste
-- Se houver <linear>: `mcp__linear-server__get_issue` para alinhar o escopo com a issue
+- Identificar os principais componentes e em qual camada cada um vive, conforme `<stack_projeto>`
+- Extrair **todos** os casos de teste da seção "Abordagem de testes" (subseção "Níveis de teste") da <techspec> — eles são a entrada direta das subtarefas de teste
+- Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada: leia-a pela ferramenta indicada no config para alinhar o escopo
 
 2. **Gerar a estrutura de tarefas**
 
-- Organizar a sequência por camada (ver "Ordem por camada" abaixo)
+- Organizar a sequência por camada (ver "Ordem de sequenciamento" abaixo)
 - **Cada tarefa deve ser uma entrega bem definida**
 - **Toda tarefa tem seu próprio conjunto de testes**, no nível apropriado à sua camada
 
@@ -61,58 +59,61 @@ A funcionalidade em que você trabalhará é identificada por este slug:
 
 - Criar um arquivo para cada tarefa principal
 - Detalhar subtarefas e critérios de sucesso
-- Detalhar os testes por nível: unitário · bloc/cubit · widget · golden · integração/E2E
+- Detalhar os testes por nível, conforme os níveis declarados em `<stack_projeto>` e usados na "Abordagem de testes" da <techspec>
 
-## Ordem por camada (Clean Architecture)
+## Ordem de sequenciamento
 
-Dependentes sempre depois das dependências:
+Dependentes sempre depois das dependências. Use a ordem de dependência entre camadas declarada
+em `<stack_projeto>` do config. O princípio, independente de nomenclatura:
 
-1. **`domain/`** — entities, contrato de repositório, usecases (Dart puro, sem Flutter)
-2. **`data/`** — models/mappers, datasource (`dio`), implementação do repositório (exceção → `Failure`)
-3. **`presentation/`** — Cubit/BLoC → widgets → página
-4. **Módulo e rotas** — binds e `ChildRoute` com rota nomeada via `flutter_modular`
-5. **Integração/E2E** — `integration_test/[feature]/`, só depois que o fluxo completo existe
-6. **Documentação** — `docs/[feature]/` + registro no container Obsidian
+1. **Regra de negócio pura** — o que não depende de nada externo
+2. **Acesso a dados e integrações** — o que fala com o mundo de fora
+3. **Apresentação/entrada** — o que expõe a funcionalidade ao consumidor
+4. **Registro e ligação** — rotas, injeção de dependência, configuração
+5. **Ponta a ponta** — só depois que o fluxo completo existe
+6. **Documentação** — conforme `<documentacao_projeto>`
+
+Se o projeto não tem camadas formais, agrupe por dependência real entre os arquivos.
 
 ## Diretrizes para criação de tarefas
 
 - Agrupar tarefas por entrega lógica
-- Ordenar tarefas logicamente, seguindo a ordem por camada acima
+- Ordenar tarefas logicamente, seguindo a ordem de sequenciamento acima
 - Tornar cada tarefa principal concluível de forma independente
 - Definir escopo e entregáveis claros para cada tarefa
 - Incluir testes como subtarefas dentro de cada tarefa principal, **sempre antes da implementação correspondente**
-- Nenhuma tarefa pode tocar `backend/`; se a API não existir, a tarefa vira "confirmar contrato com o time de backend" e é sinalizada como bloqueio
+- Nenhuma tarefa pode alterar área listada em `<limites_projeto>` como read-only; se a dependência não existir lá, a tarefa vira "confirmar contrato com o time responsável" e é sinalizada como bloqueio
 - **NÃO REPITA DETALHES DE IMPLEMENTAÇÃO** que já estão na especificação técnica — apenas faça referência a eles
 
 ## Especificações de saída
 
 ### Localização dos arquivos
 
-- Pasta da funcionalidade: `./tasks/prd-[nome-da-funcionalidade]/`
-- Lista de tarefas: `./tasks/prd-[nome-da-funcionalidade]/tasks.md`
-- Tarefas individuais: `./tasks/prd-[nome-da-funcionalidade]/[num]_task.md`
+- Pasta da funcionalidade: `./tasks/prd-<nome-da-feature>/` (conforme `<artefatos_sdd>`)
+- Lista de tarefas: `./tasks/prd-<nome-da-feature>/tasks.md`
+- Tarefas individuais: `./tasks/prd-<nome-da-feature>/<num>_task.md`
 - Modelo para a lista de tarefas: <tasks_template>
 - Modelo para cada tarefa individual: <task_template>
 
 ## Diretrizes finais
 
-- Presuma que o leitor principal é um desenvolvedor Flutter
+- Presuma que o leitor principal é um desenvolvedor com a stack de `<stack_projeto>`
 - Evite criar mais de 10 tarefas (agrupe conforme definido antes)
 - Use o formato X.0 para tarefas principais e X.Y para subtarefas
-- A soma dos testes das tarefas precisa sustentar o gate de **≥90% de cobertura por linha** (`make coverage`)
+- A soma dos testes das tarefas precisa sustentar o threshold de `<comandos_projeto>`
 
-Após concluir a análise e gerar todos os arquivos necessários, apresente os resultados ao usuário e espere confirmação para prosseguir com a implementação. Se houver issue do Linear vinculada, poste um comentário com o resumo da lista de tarefas via `mcp__linear-server__save_comment`.
+Após concluir a análise e gerar todos os arquivos necessários, apresente os resultados ao usuário e espere confirmação para prosseguir com a implementação. Se `<integracoes_projeto>` indicar um rastreador ativo e houver issue vinculada: registre, pela ferramenta indicada no config, um comentário com o resumo da lista de tarefas.
 
 ## Checklist de qualidade
 
 - [ ] Lista de alto nível aprovada antes de gerar arquivos
-- [ ] Tarefas ordenadas por camada (domain → data → presentation → módulo/rotas → E2E → docs)
-- [ ] Toda tarefa tem subtarefa de teste **antes** da subtarefa de implementação
-- [ ] Toda página nova tem subtarefa de golden test (light e dark) antes da implementação
+- [ ] Tarefas ordenadas conforme a ordem de sequenciamento (regra de negócio → dados/integrações → apresentação/entrada → registro e ligação → ponta a ponta → documentação)
+- [ ] Toda tarefa tem subtarefa de teste **antes** da subtarefa de implementação (TDD)
+- [ ] Se `<ui_projeto>` indicar ferramenta de validação visual, toda tela nova tem subtarefa de teste visual antes da implementação
 - [ ] Todos os casos de teste da <techspec> foram distribuídos entre as tarefas
-- [ ] Nenhuma tarefa altera `backend/`
-- [ ] Tarefa final de documentação dupla presente
-- [ ] Arquivos gravados em `./tasks/prd-[nome-da-funcionalidade]/`
+- [ ] Nenhuma tarefa altera área read-only de `<limites_projeto>`
+- [ ] Tarefa final de documentação presente, conforme `<documentacao_projeto>`
+- [ ] Arquivos gravados em `tasks/prd-<nome-da-feature>/` (conforme `<artefatos_sdd>`)
 
 <critical>**ANTES DE GERAR QUALQUER ARQUIVO, MOSTRE A LISTA DE TAREFAS DE ALTO NÍVEL PARA APROVAÇÃO**</critical>
 <critical>NÃO IMPLEMENTE NADA</critical>
