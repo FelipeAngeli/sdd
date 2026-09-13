@@ -38,6 +38,21 @@ convenções e as integrações daquele projeto.
    `/configurar-sdd`.
 4. A partir daí, use as skills do fluxo normalmente.
 
+### Instalar via plugin do Claude Code
+
+Se você usa Claude Code, existe um caminho mais curto que os 4 passos acima: o próprio repo é um
+marketplace de plugin.
+
+1. Peça para ser adicionado como collaborator no repositório (é privado).
+2. `claude plugin marketplace add FelipeAngeli/sdd`
+3. `claude plugin install sdd@sdd`
+4. Dentro do seu projeto, rode `/instalar-sdd` — ela pergunta o destino da cópia e se você quer a
+   camada de QA contínuo, copia as pastas certas e entrega direto para `/configurar-sdd`.
+
+Dali em diante não há diferença nenhuma para quem instalou manualmente: mesma cópia versionada no
+seu projeto, mesmo `atualizar-sdd`, mesmo `sdd.config.md`. O que muda é só como o bundle chegou
+até aqui.
+
 ## O fluxo
 
 | Skill | O que faz | Entrada | Saída |
