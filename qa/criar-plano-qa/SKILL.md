@@ -98,6 +98,11 @@ Crie `charters/CH-<slug>.md` a partir do <template_charter>, um por sessão que 
 exercitar além do caminho principal) + time-box. Os cenários de um charter são os que derivam das
 jornadas que ele cobre, filtrados pelo tipo de ciclo — não uma seleção nova.
 
+Preencha sempre **Pré-condições de ambiente** e **Evidência obrigatória**: a primeira é o que
+precisa estar de pé para a sessão valer; a segunda é o que a sessão precisa produzir para este
+charter contar como completo. `executar-sessao-qa` usa os dois para decidir prontidão — charter
+que chega sem um dos dois deixa metade desse gate sem nada para checar.
+
 Ao definir o tour, percorra as classes de risco de <baseline_seguranca> e as
 regras de `<seguranca_extensoes>` do config, e transforme em tour o que for exercitável pela
 interface pública: entrada não validada, permissão que deveria ser negada, dado sensível exposto
@@ -125,6 +130,7 @@ matriz de cobertura da execução passa a contar a mesma coisa duas vezes.
 - [ ] Toda jornada em escopo tem ao menos um cenário
 - [ ] Todo cenário cita a jornada de origem
 - [ ] Todo charter cita persona, jornada e time-box
+- [ ] Todo charter declara Pré-condições de ambiente e Evidência obrigatória
 - [ ] Nenhum arquivo ficou com status "a definir"
 
 Item que não fecha vira pergunta ao usuário, não suposição sua.
@@ -148,6 +154,7 @@ Item que não fecha vira pergunta ao usuário, não suposição sua.
 - [ ] Toda jornada em escopo tem fluxograma Mermaid com caminho de abandono
 - [ ] Todo cenário cita a jornada de origem
 - [ ] Charters ligam persona + jornada + cenários + tour + time-box
+- [ ] Todo charter declara Pré-condições de ambiente e Evidência obrigatória
 - [ ] Duplicatas reconciliadas e as fusões registradas na memória
 - [ ] Nenhum arquivo com status "a definir"
 - [ ] `run.yaml` atualizado passo a passo, com a etapa fechada e a próxima ação apontada

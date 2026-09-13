@@ -55,7 +55,7 @@ Na árvore de `<qa_continuo>` (padrão `docs/qa/`):
 - Evidências: a pasta declarada em `<qa_continuo>`; se não houver uma, `reports/evidencias/<AAAA-MM-DD>-<escopo>/`
 
 Em `<artefatos_sdd>` (fluxo por feature), só para encaminhamento de bug:
-`tasks/prd-<nome-da-feature>/bugs.md`.
+`tasks/prd-<nome-da-feature>/bugs.md` (conforme `<artefatos_sdd>`).
 
 ## Etapas
 
@@ -63,6 +63,12 @@ Em `<artefatos_sdd>` (fluxo por feature), só para encaminhamento de bug:
 
 - Leia o <processo> (em que sessão a árvore está e o que a última reprovou), a <memoria>, o
   <charter> escolhido, os cenários que ele cita e os bugs abertos em `bugs/`
+- **Reconcilie os bugs `encaminhado`**: para cada bug em `bugs/` com `Status: encaminhado`, leia o
+  `bugs.md` da feature apontada em `Encaminhado para:` (conforme `<artefatos_sdd>`). Se
+  `executar-bugfix` já marcou a entrada lá como `Status: Corrigido`, coloque os cenários afetados
+  no escopo desta sessão — o bug só vira `Status: corrigido` na árvore **depois** que esta sessão
+  reexercitar esses cenários e eles passarem. Bug que o lado da feature diz corrigido, mas cujo
+  cenário ainda não foi reverificado por esta sessão, continua `encaminhado`
 - Abra a entrada desta sessão no <processo> com `status: em_andamento`, `rodada` incrementada,
   `alvo` = o escopo, e os 8 passos `pendente`
 - Confirme as pré-condições declaradas no charter: ambiente acessível, autenticação real,
@@ -118,7 +124,8 @@ sintoma. Se existir, **funda no id mais antigo** (atualize a data do último rel
 evidência nova, cite a sessão) em vez de abrir duplicata.
 
 Achado novo vira `bugs/BUG-<AAAAMMDD>-<slug>.md` a partir do <template_bug>, com severidade
-`Crítica`, `Alta`, `Média` ou `Baixa` — a mesma escala que `executar-qa` e `executar-bugfix` usam.
+`Crítica`, `Alta`, `Média` ou `Baixa` — a mesma escala que `executar-qa` e `executar-bugfix` usam
+— e `Status: aberto`.
 
 Todo achado precisa ser **reproduzível desde a entrada da persona**: se você não consegue
 descrever o caminho desde a porta de entrada, ainda não é bug relatável, é observação.
@@ -130,8 +137,8 @@ Para cada bug, decida a quem ele pertence:
 - **Atribuível a uma feature** com pasta em `<artefatos_sdd>`: acrescente uma entrada no `bugs.md`
   daquela feature, no mesmo formato que `executar-qa` já usa (id, descrição, severidade,
   evidência), mais uma linha `Origem: <caminho do BUG-... na árvore de QA>`. No arquivo da árvore,
-  registre `Encaminhado para: tasks/prd-<slug>/bugs.md`. Diga ao usuário para rodar
-  `executar-bugfix --prd <slug>`
+  registre `Encaminhado para: tasks/prd-<slug>/bugs.md` (conforme `<artefatos_sdd>`) e
+  `Status: encaminhado`. Diga ao usuário para rodar `executar-bugfix --prd <slug>`
 - **Não atribuível** a nenhuma feature rastreada: marque `Atribuição: não atribuído` no arquivo do
   bug e liste-o na seção de triagem pendente do relatório. Esta skill não escolhe dono nem corrige
 
@@ -143,7 +150,9 @@ Para cada bug, decida a quem ele pertence:
   `BLOQUEADO` ou `NÃO EXECUTADO` com motivo registrado
 - Complete o relatório: totais por severidade, evidências, bugs abertos, triagem pendente
 - **Prontidão**: declare pronto para release **apenas** se não houver bug `Crítica`/`Alta` aberto
-  no escopo e toda evidência obrigatória do charter existir. Na dúvida, não declare
+  no escopo e toda evidência obrigatória do charter existir. Para este gate, **aberto** é qualquer
+  `Status` diferente de `corrigido` ou `descartado` — um bug `encaminhado` bloqueia a prontidão
+  exatamente como um `aberto`, até virar `corrigido` (etapa 1). Na dúvida, não declare
 - Feche a entrada no <processo>: `status: concluida`, `fim`, `veredito`
   (`sessão N — PRONTO` / `sessão N — NÃO PRONTO, X bugs (Y alta+)`), os 8 passos com seu resultado,
   e `proxima_acao` apontando para os `executar-bugfix` das features afetadas ou para a próxima
@@ -156,6 +165,7 @@ Para cada bug, decida a quem ele pertence:
 ## Checklist de qualidade
 
 - [ ] `<qa_continuo>` ativo e charter escolhido antes de começar
+- [ ] Bugs `encaminhado` reconciliados com o `bugs.md` da feature antes de montar a matriz
 - [ ] Pré-condições confirmadas, ou sessão marcada BLOQUEADO sem contorno
 - [ ] Matriz criada cheia de `Pending` **antes** de exercitar qualquer coisa
 - [ ] Toda jornada percorrida por uma superfície que um usuário real alcança
@@ -164,10 +174,13 @@ Para cada bug, decida a quem ele pertence:
 - [ ] Evidência capturada em cada checkpoint
 - [ ] Achados deduplicados contra `bugs/` antes de abrir arquivo novo
 - [ ] Severidade na escala Crítica/Alta/Média/Baixa
-- [ ] Bug atribuível encaminhado para o `bugs.md` da feature, com origem citada nos dois lados
+- [ ] Bug novo gravado com `Status: aberto`
+- [ ] Bug atribuível encaminhado para o `bugs.md` da feature, com origem citada nos dois lados e
+      `Status: encaminhado` no arquivo da árvore
 - [ ] Bug não atribuível marcado como tal e listado na triagem pendente
 - [ ] Zero linhas `Pending` no fechamento
-- [ ] Prontidão declarada só com evidência obrigatória completa
+- [ ] Prontidão declarada só sem bug `Crítica`/`Alta` em status diferente de `corrigido`/`descartado`
+      e com evidência obrigatória completa
 - [ ] `run.yaml` atualizado passo a passo, entrada da sessão fechada e próxima ação apontada
 - [ ] `memoria/executar-sessao-qa.md` atualizada com o que não virou bug e o que já passou
 - [ ] Nenhum arquivo de código do produto alterado por esta skill

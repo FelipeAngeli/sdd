@@ -17,7 +17,9 @@ convenções e as integrações daquele projeto.
    ```
 
    Se você já sabe que quer a camada de QA contínuo, acrescente `sdd/qa` à lista. Se não souber
-   ainda, deixe fora: `configurar-sdd` pergunta e copia depois.
+   ainda, deixe fora: `configurar-sdd` pergunta depois, mas só copia `qa/` se ela já estiver nesta
+   cópia local — se você decidir ativar mais tarde e tiver deixado `qa/` de fora aqui, é
+   `atualizar-sdd` quem traz a pasta a partir do bundle mestre.
 
    > **Não use `cp -a sdd/. destino/` nem `cp -r sdd/* destino/`.** O primeiro arrasta o `.git/` e
    > o `.gitignore` do bundle mestre para dentro do projeto — e esse `.gitignore` faz o projeto
@@ -106,9 +108,11 @@ vive em `.sdd/`, oculta, fora do caminho.
 O `sdd.config.md` fica visível de propósito: **é o único arquivo que muda de projeto para
 projeto**, e você deve lê-lo, editá-lo e versioná-lo.
 
-Os caminhos são todos relativos (`../sdd.config.md`, `../.sdd/_shared/...`), então os dois modos
-de instalação — na raiz do projeto ou em `.claude/skills/` — continuam funcionando sem alteração
-nenhuma nas skills.
+Os caminhos são todos relativos — `../sdd.config.md` e `../.sdd/_shared/...` nas 7 skills do
+fluxo, que ficam um nível abaixo da raiz do bundle; `../../sdd.config.md` e
+`../../.sdd/_shared/...` em `.sdd/*` e `qa/*`, que ficam um nível mais abaixo ainda —, então os
+dois modos de instalação — na raiz do projeto ou em `.claude/skills/` — continuam funcionando sem
+alteração nenhuma nas skills.
 
 ## O que é fixo e o que é configurável
 

@@ -115,8 +115,8 @@ registre "sem padrão formal" em vez de deduzir um a partir de um único exemplo
 
 ### 6. Disponibilizar as skills para chamada por linguagem natural (opcional)
 
-Se o projeto usa Claude Code e as skills ainda não estão em `.claude/skills/`, ofereça copiar o
-bundle para lá, para que as chamadas seguintes aconteçam sem repetir o caminho. O
+Se o projeto usa Claude Code e as skills do fluxo ainda não estão em `.claude/skills/`, ofereça
+copiar o bundle para lá, para que as chamadas seguintes aconteçam sem repetir o caminho. O
 `sdd.config.md` acompanha a cópia, na raiz dela.
 
 Copie **nomeando o que vai**, nunca o diretório inteiro:
@@ -126,13 +126,7 @@ mkdir -p .claude/skills
 cp -R <bundle>/criar-prd <bundle>/criar-techspec <bundle>/criar-tasks \
       <bundle>/executar-task <bundle>/executar-qa <bundle>/executar-bugfix \
       <bundle>/executar-review <bundle>/.sdd <bundle>/VERSION .claude/skills/
-
-# só quando <qa_continuo> está com Ativo: sim
-cp -R <bundle>/qa .claude/skills/
 ```
-
-A pasta `qa/` só é copiada quando `<qa_continuo>` está com `Ativo: sim`. Projeto que não usa a
-camada não deve ganhar a pasta — skill que existe mas nunca roda é ruído na revisão do bundle.
 
 <critical>NUNCA copie o bundle com `cp -a <bundle>/. destino/` nem `cp -r <bundle>/* destino/`. O primeiro arrasta o `.git/` e o `.gitignore` do bundle mestre — e esse `.gitignore` faz o projeto destino ignorar o próprio `sdd.config.md`. O segundo omite a `.sdd/`, e sem ela todas as skills do fluxo quebram por falta das baselines.</critical>
 
@@ -141,6 +135,32 @@ o usuário: enquanto o `.gitignore` estiver lá, o `sdd.config.md` dele não ent
 
 Se o usuário recusar, ou a ferramenta não for o Claude Code, nada quebra: todas as skills
 continuam funcionando quando o usuário aponta o caminho do arquivo e pede para segui-lo.
+
+#### `qa/`: decidido por `<qa_continuo>`, nunca pelo gate acima
+
+O gate "skills ainda não estão em `.claude/skills/`" é sobre a cópia inicial das 7 skills do
+fluxo. A pasta `qa/` não segue esse gate — ela é decidida **só** pelo estado de `<qa_continuo>`
+nesta etapa, mesmo numa reconfiguração em que o resto do bundle já está copiado há muito tempo:
+
+- **Ativando** (`Ativo: sim` e `qa/` ainda não está no destino): copie agora, **mesmo que as
+  demais skills já estivessem em `.claude/skills/`** — não pule esta cópia só porque o gate acima
+  já foi satisfeito antes:
+
+  ```sh
+  cp -R <bundle>/qa .claude/skills/
+  ```
+
+- **Ativando sem ter a pasta no bundle local**: se `<bundle>/qa` não existir na cópia local desta
+  skill, `configurar-sdd` não tem de onde copiar — ela só copia do bundle local, nunca baixa nada
+  de fora. Diga isso ao usuário e aponte para `atualizar-sdd`, que é a skill que traz pastas novas
+  a partir de um bundle mestre mais recente
+- **Desativando** (`Ativo` passou de `sim` para `não` nesta reconfiguração): ofereça remover a
+  pasta `qa/` já copiada, junto com os dois atalhos de QA da etapa 7. **Peça confirmação
+  explícita antes de remover qualquer coisa** — apagar arquivos do projeto do usuário não é
+  decisão que esta skill toma sozinha
+
+Projeto que não ativa a camada não deve ganhar a pasta `qa/` — skill que existe mas nunca roda é
+ruído na revisão do bundle.
 
 ### 7. Gravar os atalhos do Claude Code (só no Claude Code)
 
@@ -155,8 +175,10 @@ Se o projeto tem uma pasta `.claude/`, siga o <template_comando> e grave:
   `<qa_continuo>` está com `Ativo: sim`
 
 apontando para os caminhos reais. Se um arquivo já existir com o caminho correto, deixe como está.
-Se `<qa_continuo>` passou de `sim` para `não` numa reconfiguração, remova os dois atalhos de QA e
-avise o usuário — atalho apontando para skill que não foi copiada é erro na primeira chamada.
+Se `<qa_continuo>` passou de `sim` para `não` numa reconfiguração, ofereça remover os dois atalhos
+de QA junto com a pasta `qa/` (etapa 6) — **peça confirmação explícita antes de remover qualquer
+coisa**. Atalho apontando para skill que não foi copiada é erro na primeira chamada, mas apagar
+arquivo do projeto do usuário não é decisão que esta skill toma sozinha.
 Se a ferramenta não for o Claude Code, pule esta etapa — ela não afeta nenhuma outra.
 
 ### 8. Relatar (obrigatório)
@@ -177,6 +199,8 @@ Se a ferramenta não for o Claude Code, pule esta etapa — ela não afeta nenhu
 - [ ] Nenhum campo preenchido por suposição
 - [ ] `sdd.config.md` gravado na raiz do bundle
 - [ ] Atalhos `.claude/commands/configurar-sdd.md` e `atualizar-sdd.md` gravados, ou etapa justificadamente pulada
-- [ ] `<qa_continuo>` decidido com o usuário; se ativo, `qa/` copiada e os dois atalhos de QA gravados
+- [ ] `<qa_continuo>` decidido com o usuário; se ativo, `qa/` copiada (mesmo com o resto do bundle
+      já instalado) e os dois atalhos de QA gravados; se desativado, remoção de `qa/` e dos
+      atalhos oferecida e feita só com confirmação explícita
 - [ ] Config preexistente atualizado por seção, com diff aprovado
 - [ ] Relatório final entregue com detectado vs. perguntado e caminho do arquivo

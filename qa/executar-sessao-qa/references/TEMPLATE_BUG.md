@@ -3,7 +3,7 @@
 - **Severidade:** Crítica | Alta | Média | Baixa
 - **Status:** aberto | encaminhado | corrigido | descartado
 - **Atribuição:** [nome da feature em `<artefatos_sdd>`, ou "não atribuído"]
-- **Encaminhado para:** [`tasks/prd-<slug>/bugs.md`, ou "—"]
+- **Encaminhado para:** [`tasks/prd-<slug>/bugs.md` (conforme `<artefatos_sdd>`), ou "—"]
 - **Primeiro relato:** [AAAA-MM-DD, sessão em `reports/`]
 - **Último relato:** [AAAA-MM-DD, sessão em `reports/`]
 - **Cenários afetados:** [ids em `scenarios/`]

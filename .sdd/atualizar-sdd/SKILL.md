@@ -46,7 +46,8 @@ qualquer arquivo do projeto fora do bundle.
 
 ### 3. Classificar cada diferença (obrigatório)
 
-- **novo no mestre** — arquivo que não existe aqui
+- **novo no mestre** — arquivo que não existe aqui. Exceção: `qa/` ausente aqui e presente no
+  mestre não entra nesta categoria — é o caso opt-in da etapa 2, com regra própria
 - **alterado no mestre** — conteúdo diferente, versão local igual à original
 - **divergente** — o arquivo foi editado **localmente**. Este é o caso delicado: a atualização
   descartaria a edição do time. Destaque cada um destes separadamente e trate como decisão do
@@ -57,6 +58,10 @@ qualquer arquivo do projeto fora do bundle.
 
 Mostre um resumo por categoria e o diff dos arquivos divergentes. Para cada divergente, pergunte:
 manter o local, aceitar o do mestre, ou combinar. Só então grave.
+
+`qa/` ausente aqui não entra nesse fluxo de decisão por arquivo: ela segue a regra opt-in da
+etapa 2 (ofereça a cópia e a ativação, não copie por conta própria), mesmo que o restante da
+comparação a classifique como "novo no mestre".
 
 ### 5. Fechar (obrigatório)
 

@@ -6,6 +6,9 @@
 - **Cenários em escopo:** [ids em `scenarios/`]
 - **Time-box:** [ex.: 45 minutos]
 - **Pré-condições de ambiente:** [o que precisa estar de pé para a sessão valer]
+- **Evidência obrigatória:** [o que a sessão precisa produzir para este charter contar como
+  completo — ex.: captura de tela de cada checkpoint, saída de comando ou resposta de API
+  registrada, vídeo do fluxo ponta a ponta]
 
 ## Tour
 

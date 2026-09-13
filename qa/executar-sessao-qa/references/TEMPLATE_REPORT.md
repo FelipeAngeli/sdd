@@ -37,7 +37,7 @@
 
 | ID | Descrição | Severidade | Atribuição | Encaminhado para |
 |----|-----------|------------|------------|------------------|
-| [BUG-AAAAMMDD-slug] | [descrição] | Crítica/Alta/Média/Baixa | [feature ou "não atribuído"] | [`tasks/prd-<slug>/bugs.md` ou "triagem pendente"] |
+| [BUG-AAAAMMDD-slug] | [descrição] | Crítica/Alta/Média/Baixa | [feature ou "não atribuído"] | [`tasks/prd-<slug>/bugs.md` (conforme `<artefatos_sdd>`) ou "triagem pendente"] |
 
 ## Triagem pendente
 

@@ -2,9 +2,8 @@
 
 > Um arquivo por feature, na raiz da pasta da feature em `<artefatos_sdd>` — e, quando a camada de
 > QA contínuo está ativa, mais um na raiz da árvore de `<qa_continuo>`, com o mesmo esquema. É a
-> **fonte de verdade
-> sobre o que já foi feito e onde parou**. Toda skill do fluxo lê este arquivo ANTES de começar e o
-> atualiza **passo a passo enquanto trabalha** — não só no fim.
+> **fonte de verdade sobre o que já foi feito e onde parou**. Toda skill do fluxo lê este arquivo
+> ANTES de começar e o atualiza **passo a passo enquanto trabalha** — não só no fim.
 >
 > Ele existe para que uma sessão nova saiba onde retomar sem reler PRD, TechSpec e tasks inteiros —
 > e, diferente de um resumo por etapa, ele desce ao **passo dentro da etapa**: se a sessão caiu no
