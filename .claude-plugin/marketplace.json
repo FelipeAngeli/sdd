@@ -1,0 +1,14 @@
+{
+  "name": "sdd",
+  "description": "Marketplace interno do bundle SDD",
+  "owner": { "name": "Felipe Angeli", "email": "felipe.trebien@keltech.app" },
+  "plugins": [
+    {
+      "name": "sdd",
+      "description": "Fluxo de desenvolvimento orientado a especificação como skills portáteis.",
+      "version": "1.3.0",
+      "source": "./",
+      "author": { "name": "Felipe Angeli", "email": "felipe.trebien@keltech.app" }
+    }
+  ]
+}
