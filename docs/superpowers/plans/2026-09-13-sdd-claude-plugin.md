@@ -238,15 +238,7 @@ claude plugin marketplace list
 
 Expected: `sdd` aparece na listagem, apontando para o caminho local do repositório.
 
-- [ ] **Step 3: Confirmar que a skill `instalar-sdd` é descoberta**
-
-```bash
-claude plugin details sdd@sdd
-```
-
-Expected: a saída lista `instalar-sdd` no inventário de skills do plugin (nenhuma outra skill — as 7 do fluxo e `.sdd/`/`qa/` não são descobertas por não estarem em `skills/`, como o desenho previu).
-
-- [ ] **Step 4: Instalar num projeto descartável**
+- [ ] **Step 3: Instalar num projeto descartável**
 
 ```bash
 SCRATCH_PROJ="/private/tmp/claude-501/-Users-felipe-Desktop-sdd/d07dac0a-9215-474f-905e-a533f53bfe98/scratchpad/sdd-plugin-validation"
@@ -259,6 +251,19 @@ claude plugin list --json | grep -o '"sdd@sdd"'
 
 Expected: a última linha imprime `"sdd@sdd"`, confirmando o plugin instalado no escopo local desse
 projeto.
+
+- [ ] **Step 4: Confirmar que a skill `instalar-sdd` é descoberta**
+
+> **Ordem corrigida em execução (Task 3, ronda 1):** `claude plugin details` exige o plugin
+> **instalado**, não só o marketplace registrado — rodar este step antes do Step 3 (ordem
+> original do plano) falha com "Plugin not found". Rode de dentro de `$SCRATCH_PROJ`, depois do
+> Step 3.
+
+```bash
+cd "$SCRATCH_PROJ" && claude plugin details sdd@sdd
+```
+
+Expected: a saída lista `instalar-sdd` no inventário de skills do plugin (nenhuma outra skill — as 7 do fluxo e `.sdd/`/`qa/` não são descobertas por não estarem em `skills/`, como o desenho previu).
 
 - [ ] **Step 5: Verificação manual (não automatizável em bash)**
 
