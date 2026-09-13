@@ -94,8 +94,14 @@ Jornada é o que o usuário está tentando conseguir, ponta a ponta — não uma
 ### 5. Planejar charters
 
 Crie `charters/CH-<slug>.md` a partir do <template_charter>, um por sessão que você quer que
-`executar-sessao-qa` rode. Cada charter liga: persona + jornada(s) + tour (o que exercitar além do
-caminho principal) + time-box.
+`executar-sessao-qa` rode. Cada charter liga: persona + jornada(s) + cenários + tour (o que
+exercitar além do caminho principal) + time-box. Os cenários de um charter são os que derivam das
+jornadas que ele cobre, filtrados pelo tipo de ciclo — não uma seleção nova.
+
+Ao definir o tour, percorra as classes de risco de `../../.sdd/_shared/SECURITY_BASELINE.md` e as
+regras de `<seguranca_extensoes>` do config, e transforme em tour o que for exercitável pela
+interface pública: entrada não validada, permissão que deveria ser negada, dado sensível exposto
+na tela ou no log. Risco que só se vê lendo código não é tour — é achado de `executar-review`.
 
 Tipos de ciclo, conforme o que o usuário pedir:
 
@@ -141,9 +147,10 @@ Item que não fecha vira pergunta ao usuário, não suposição sua.
 - [ ] `personas.md` levantado com o usuário, não inventado
 - [ ] Toda jornada em escopo tem fluxograma Mermaid com caminho de abandono
 - [ ] Todo cenário cita a jornada de origem
-- [ ] Charters ligam persona + jornada + tour + time-box
+- [ ] Charters ligam persona + jornada + cenários + tour + time-box
 - [ ] Duplicatas reconciliadas e as fusões registradas na memória
 - [ ] Nenhum arquivo com status "a definir"
 - [ ] `run.yaml` atualizado passo a passo, com a etapa fechada e a próxima ação apontada
 - [ ] `memoria/criar-plano-qa.md` atualizada com decisões, descartes e premissas em aberto
 - [ ] Nenhum teste rodado e nenhum arquivo de código tocado por esta skill
+- [ ] Comentário postado na issue do rastreador configurado (se houver)
