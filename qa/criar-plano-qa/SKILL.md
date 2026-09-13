@@ -98,7 +98,7 @@ Crie `charters/CH-<slug>.md` a partir do <template_charter>, um por sessão que 
 exercitar além do caminho principal) + time-box. Os cenários de um charter são os que derivam das
 jornadas que ele cobre, filtrados pelo tipo de ciclo — não uma seleção nova.
 
-Ao definir o tour, percorra as classes de risco de `../../.sdd/_shared/SECURITY_BASELINE.md` e as
+Ao definir o tour, percorra as classes de risco de <baseline_seguranca> e as
 regras de `<seguranca_extensoes>` do config, e transforme em tour o que for exercitável pela
 interface pública: entrada não validada, permissão que deveria ser negada, dado sensível exposto
 na tela ou no log. Risco que só se vê lendo código não é tour — é achado de `executar-review`.
