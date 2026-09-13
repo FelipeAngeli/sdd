@@ -47,7 +47,7 @@
 ## Segurança
 | Verificação | Status | Observações |
 |-------------|--------|-------------|
-| Baseline (`_shared/SECURITY_BASELINE.md`) | OK / [N] desvios | [obs] |
+| Baseline (`.sdd/_shared/SECURITY_BASELINE.md`) | OK / [N] desvios | [obs] |
 | Scanner de dependências vulneráveis | [N] achados (alta/crítica: [N]) | [obs] |
 | Extensões de `<seguranca_extensoes>` | OK / [N] desvios | [obs] |
 
@@ -58,7 +58,7 @@
 - Testes ponta a ponta atualizados: SIM / NÃO / N/A
 
 ### Qualidade dos testes
-[Conforme `_shared/QUALITY_BASELINE.md`, seção "Qualidade dos testes".]
+[Conforme `.sdd/_shared/QUALITY_BASELINE.md`, seção "Qualidade dos testes".]
 
 | Verificação | Status | Observações |
 |-------------|--------|-------------|

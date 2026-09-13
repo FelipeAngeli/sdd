@@ -7,8 +7,8 @@ description: Crie um PRD para uma nova funcionalidade do projeto atual. O PRD se
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
-<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
-<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,

@@ -6,8 +6,8 @@ description: Identifique e implemente a próxima task técnica de uma feature a 
 <prd>`--prd`</prd>
 
 <config>`../sdd.config.md`</config>
-<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
-<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
@@ -23,7 +23,7 @@ Você é um desenvolvedor de alto nível responsável por implementar as tarefas
 
 <critical>Não pule nenhuma subtarefa</critical>
 <critical>**TDD É OBRIGATÓRIO**: teste falhando primeiro → confirmar o motivo da falha → código mínimo → refactor. Nenhum código de produção sem teste falhando antes. Exceções: ajuste de UI, código gerado, config</critical>
-<critical>Antes de escrever ou refatorar qualquer teste, releia a seção "Qualidade dos testes" de `../_shared/QUALITY_BASELINE.md`</critical>
+<critical>Antes de escrever ou refatorar qualquer teste, releia a seção "Qualidade dos testes" de `../.sdd/_shared/QUALITY_BASELINE.md`</critical>
 <critical>Respeite a direção de dependência entre camadas declarada em `<stack_projeto>`. Nenhuma camada importa de quem depende dela</critical>
 <critical>Se `<ui_projeto>` indicar ferramenta de validação visual, toda tela nova exige teste visual escrito **antes** da implementação da tela</critical>
 <critical>Nunca altere área listada como read-only em `<limites_projeto>`</critical>
@@ -116,8 +116,8 @@ cobertura. Nenhum pode falhar.
 - Se a cobertura reprovar, **escreva mais teste** — nunca baixe o threshold
 - Se o projeto tem E2E e a tarefa o afeta, rode o comando de E2E. **Peça confirmação antes** de
   qualquer execução que escreva dados em ambiente compartilhado
-- Confira o código alterado contra `../_shared/SECURITY_BASELINE.md` e
-  `../_shared/QUALITY_BASELINE.md` antes de marcar a tarefa como concluída
+- Confira o código alterado contra `../.sdd/_shared/SECURITY_BASELINE.md` e
+  `../.sdd/_shared/QUALITY_BASELINE.md` antes de marcar a tarefa como concluída
 
 ### 7. Fechamento
 
@@ -133,7 +133,7 @@ cobertura. Nenhum pode falhar.
 ## Checklist de qualidade
 
 - [ ] Testes existentes revisados contra a seção "Qualidade dos testes" de
-      `../_shared/QUALITY_BASELINE.md` antes de alterá-los
+      `../.sdd/_shared/QUALITY_BASELINE.md` antes de alterá-los
 - [ ] Todo código de produção precedido de teste falhando pelo motivo certo
 - [ ] Teste visual escrito antes de toda tela nova, quando `<ui_projeto>` indicar ferramenta de
       validação visual
@@ -141,8 +141,8 @@ cobertura. Nenhum pode falhar.
 - [ ] Nenhuma área read-only de `<limites_projeto>` alterada
 - [ ] Comandos de `<comandos_projeto>` (format, lint, testes) verdes
 - [ ] Cobertura de `<comandos_projeto>` no threshold declarado
-- [ ] Conformidade verificada contra `../_shared/SECURITY_BASELINE.md` e
-      `../_shared/QUALITY_BASELINE.md`
+- [ ] Conformidade verificada contra `../.sdd/_shared/SECURITY_BASELINE.md` e
+      `../.sdd/_shared/QUALITY_BASELINE.md`
 - [ ] `tasks.md` atualizado
 - [ ] Comentário postado na issue do rastreador configurado (se houver)
 

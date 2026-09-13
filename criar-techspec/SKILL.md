@@ -7,8 +7,8 @@ description: Crie um TechSpec que traduz o PRD em decisões de arquitetura para 
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
-<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
-<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
@@ -28,7 +28,7 @@ Você é um especialista em especificação técnica focado em produzir Tech Spe
 <critical>EM HIPÓTESE ALGUMA DESVIE DO PADRÃO DO <template></critical>
 <critical>EM HIPÓTESE ALGUMA IMPLEMENTE O CÓDIGO; O OBJETIVO É PRODUZIR A ESPECIFICAÇÃO</critical>
 <critical>A SEÇÃO "Abordagem de testes" PRECISA SER POPULADA COM O MÁXIMO DE CASOS DE TESTE POSSÍVEL PARA ATINGIR O THRESHOLD DE `<comandos_projeto>`, COBRINDO TODOS OS NÍVEIS DE TESTE QUE A STACK SUPORTA</critical>
-<critical>Carregue `../_shared/SECURITY_BASELINE.md` e `../_shared/QUALITY_BASELINE.md` antes de escrever as seções de testes e de segurança</critical>
+<critical>Carregue `../.sdd/_shared/SECURITY_BASELINE.md` e `../.sdd/_shared/QUALITY_BASELINE.md` antes de escrever as seções de testes e de segurança</critical>
 
 ## Objetivos principais
 
@@ -112,7 +112,7 @@ Fazer perguntas objetivas sobre:
 
 ### 6. Mapeamento de conformidade com padrões (obrigatório)
 
-- Conferir contra `../_shared/SECURITY_BASELINE.md`, `../_shared/QUALITY_BASELINE.md` e as regras
+- Conferir contra `../.sdd/_shared/SECURITY_BASELINE.md`, `../.sdd/_shared/QUALITY_BASELINE.md` e as regras
   invioláveis registradas em `<limites_projeto>` do config
 - Verificar explicitamente: a direção de dependência entre camadas declarada em `<stack_projeto>`
   não foi violada, e as convenções de `<qualidade_extensoes>` foram seguidas
@@ -161,7 +161,7 @@ Fazer perguntas objetivas sobre:
 - [ ] Tokens/referências de design confrontados com o que já existe (quando `<integracoes_projeto>` indicar ferramenta de design ativa)
 - [ ] Principais esclarecimentos técnicos respondidos
 - [ ] Especificação técnica gerada com o modelo
-- [ ] Conformidade verificada contra `../_shared/SECURITY_BASELINE.md`, `../_shared/QUALITY_BASELINE.md` e `<limites_projeto>`
+- [ ] Conformidade verificada contra `../.sdd/_shared/SECURITY_BASELINE.md`, `../.sdd/_shared/QUALITY_BASELINE.md` e `<limites_projeto>`
 - [ ] Abordagem de testes cobre todos os níveis suportados pela stack e mira o threshold de `<comandos_projeto>`
 - [ ] Arquivo gravado em `tasks/prd-<nome-da-feature>/techspec.md` (conforme `<artefatos_sdd>`)
 - [ ] Caminho final da saída fornecido e confirmação
@@ -173,4 +173,4 @@ Fazer perguntas objetivas sobre:
 <critical>EM HIPÓTESE ALGUMA DESVIE DO PADRÃO DO <template></critical>
 <critical>EM HIPÓTESE ALGUMA IMPLEMENTE O CÓDIGO; O OBJETIVO É PRODUZIR A ESPECIFICAÇÃO</critical>
 <critical>A SEÇÃO "Abordagem de testes" PRECISA SER POPULADA COM O MÁXIMO DE CASOS DE TESTE POSSÍVEL PARA ATINGIR O THRESHOLD DE `<comandos_projeto>`, COBRINDO TODOS OS NÍVEIS DE TESTE QUE A STACK SUPORTA</critical>
-<critical>Carregue `../_shared/SECURITY_BASELINE.md` e `../_shared/QUALITY_BASELINE.md` antes de escrever as seções de testes e de segurança</critical>
+<critical>Carregue `../.sdd/_shared/SECURITY_BASELINE.md` e `../.sdd/_shared/QUALITY_BASELINE.md` antes de escrever as seções de testes e de segurança</critical>

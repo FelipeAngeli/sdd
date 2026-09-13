@@ -8,13 +8,21 @@ convenções e as integrações daquele projeto.
 
 1. Copie a pasta inteira para o projeto. Pode ser na raiz (`sdd/`) ou direto em
    `.claude/skills/` — as duas formas funcionam.
+
+   > **Atenção ao copiar:** o bundle contém a pasta oculta `.sdd/`, e `cp -r sdd/* destino/`
+   > **não** a copia — o glob do shell ignora nomes que começam com ponto. Use
+   > `cp -a sdd/. destino/`, ou copie a pasta inteira de uma vez. Sem a `.sdd/`, as skills do
+   > fluxo param por falta das baselines.
+
 2. Peça para a IA configurar, de um destes dois jeitos:
-   - **Qualquer ferramenta de IA:** aponte o caminho e peça, ex.: *"leia `sdd/configurar-sdd/SKILL.md`
-     e siga as instruções para configurar o SDD neste projeto"*
-   - **Claude Code, com o bundle em `.claude/skills/`:** basta pedir em linguagem natural, ex.:
-     *"configura o SDD neste projeto"*
+   - **Qualquer ferramenta de IA:** aponte o caminho e peça, ex.: *"leia
+     `sdd/.sdd/configurar-sdd/SKILL.md` e siga as instruções para configurar o SDD neste projeto"*
+   - **Claude Code, com o bundle em `.claude/skills/`:** aponte o caminho na primeira vez
+     (`.claude/skills/.sdd/configurar-sdd/SKILL.md`). Depois disso existe o atalho
+     `/configurar-sdd`.
 3. A skill `configurar-sdd` lê os arquivos de regra do projeto, explora o repositório, pergunta
-   só o que não conseguiu detectar, e grava o `sdd.config.md`.
+   só o que não conseguiu detectar, grava o `sdd.config.md` e — no Claude Code — cria o atalho
+   `/configurar-sdd`.
 4. A partir daí, use as skills do fluxo normalmente.
 
 ## O fluxo
@@ -32,10 +40,25 @@ convenções e as integrações daquele projeto.
 
 ## Estrutura
 
-- `configurar-sdd/` — a skill de adaptação e o esqueleto do arquivo de configuração
-- `criar-*/` e `executar-*/` — as skills do fluxo, agnósticas de stack
-- `_shared/` — baselines universais de segurança e de qualidade, carregadas pelas skills
-- `sdd.config.md` — gerado por projeto; **é o único arquivo que muda de projeto para projeto**
+```
+criar-prd/  criar-techspec/  criar-tasks/
+executar-task/  executar-qa/  executar-bugfix/  executar-review/
+.sdd/
+  _shared/          baselines de segurança e qualidade, carregadas pelas skills
+  configurar-sdd/   a skill de adaptação e o esqueleto do arquivo de configuração
+sdd.config.md       gerado por projeto
+```
+
+As 7 pastas do fluxo ficam na raiz porque são o que você usa no dia a dia — no Claude Code, são
+exatamente as 7 skills que aparecem em `.claude/skills/`. Tudo que é infraestrutura vive em
+`.sdd/`, oculta, fora do caminho.
+
+O `sdd.config.md` fica visível de propósito: **é o único arquivo que muda de projeto para
+projeto**, e você deve lê-lo, editá-lo e versioná-lo.
+
+Os caminhos são todos relativos (`../sdd.config.md`, `../.sdd/_shared/...`), então os dois modos
+de instalação — na raiz do projeto ou em `.claude/skills/` — continuam funcionando sem alteração
+nenhuma nas skills.
 
 ## O que é fixo e o que é configurável
 
@@ -50,9 +73,9 @@ commit/branch/PR e de comentário, e onde documentar.
 
 ## Reconfigurar depois
 
-Rode `configurar-sdd` de novo. Ela atualiza o `sdd.config.md` seção por seção, preservando o que
-você editou à mão, e mostra o que muda antes de gravar. As skills não são reescritas em nenhum
-momento.
+Rode `configurar-sdd` de novo — no Claude Code, `/configurar-sdd`. Ela atualiza o
+`sdd.config.md` seção por seção, preservando o que você editou à mão, e mostra o que muda antes
+de gravar. As skills não são reescritas em nenhum momento.
 
 ## Versionamento
 

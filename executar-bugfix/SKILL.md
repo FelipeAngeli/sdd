@@ -7,8 +7,8 @@ description: Leia o relatório de bugs de uma feature, analise e corrija cada de
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
-<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
-<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
@@ -48,7 +48,7 @@ Utilize o `nome-da-funcionalidade` como o <prd>
 - Ler o arquivo `bugs.md` e extrair TODOS os bugs documentados
 - Ler o PRD para entender os requisitos afetados por cada bug
 - Ler a TechSpec para entender as decisões técnicas relevantes
-- Revisar `../_shared/SECURITY_BASELINE.md`, `../_shared/QUALITY_BASELINE.md` e as convenções de
+- Revisar `../.sdd/_shared/SECURITY_BASELINE.md`, `../.sdd/_shared/QUALITY_BASELINE.md` e as convenções de
   `<seguranca_extensoes>` / `<qualidade_extensoes>` do config para garantir conformidade nas correções
 - Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada: leia-a
   pela ferramenta indicada no config para contexto adicional. Caso contrário, pule esta etapa.

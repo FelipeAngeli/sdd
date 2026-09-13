@@ -51,13 +51,13 @@ Arquivos de regra lidos na configuração: [caminhos; ou "nenhum encontrado"]
 </limites_projeto>
 
 <seguranca_extensoes>
-[Regras de segurança específicas deste projeto, que somam ao `_shared/SECURITY_BASELINE.md`.
+[Regras de segurança específicas deste projeto, que somam ao `.sdd/_shared/SECURITY_BASELINE.md`.
 Ex.: "token de sessão só em armazenamento seguro do sistema", "dados de usuário sujeitos a
 proteção de dados pessoais". Se não houver, escreva "nenhuma além da baseline".]
 </seguranca_extensoes>
 
 <qualidade_extensoes>
-[Convenções de estilo/nomenclatura específicas, que somam ao `_shared/QUALITY_BASELINE.md`.
+[Convenções de estilo/nomenclatura específicas, que somam ao `.sdd/_shared/QUALITY_BASELINE.md`.
 Ex.: regras relevantes da configuração de lint detectada. Se não houver, escreva
 "nenhuma além da baseline".]
 </qualidade_extensoes>

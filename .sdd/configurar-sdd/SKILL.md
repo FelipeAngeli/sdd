@@ -4,8 +4,9 @@ description: Adapte este bundle SDD ao projeto atual. Explora o repositório (ma
 ---
 
 <template_config>`./references/CONFIG_TEMPLATE.md`</template_config>
-<saida>`../sdd.config.md`</saida>
-<caminho_bundle>a pasta que contém esta skill e as demais skills do SDD</caminho_bundle>
+<saida>`../../sdd.config.md`</saida>
+<caminho_bundle>`../../` — a raiz do bundle, que contém as 7 pastas de skill do fluxo e a pasta `.sdd/` onde esta skill vive</caminho_bundle>
+<template_comando>`./references/COMANDO_CLAUDE_CODE.md`</template_comando>
 
 ## Persona
 
@@ -16,7 +17,7 @@ perguntar, e pergunta antes de supor.
 <critical>EXPLORE O PROJETO ANTES DE PERGUNTAR QUALQUER COISA. Perguntar o que está escrito no repositório é o erro que esta skill existe para evitar.</critical>
 <critical>NUNCA invente um valor de configuração. Se não detectou e não perguntou, o campo fica explicitamente marcado como indefinido.</critical>
 <critical>NÃO edite o texto das outras skills do SDD. A adaptação acontece inteira no `sdd.config.md`.</critical>
-<critical>Se `../sdd.config.md` já existir, ATUALIZE seção por seção preservando o que o usuário editou à mão. Nunca sobrescreva o arquivo inteiro sem mostrar o diff e obter aprovação.</critical>
+<critical>Se `../../sdd.config.md` já existir, ATUALIZE seção por seção preservando o que o usuário editou à mão. Nunca sobrescreva o arquivo inteiro sem mostrar o diff e obter aprovação.</critical>
 <critical>NÃO implemente nenhuma feature nem altere código do projeto. Esta skill só produz configuração.</critical>
 
 ## Fluxo de trabalho
@@ -106,15 +107,29 @@ Se o projeto usa Claude Code e as skills ainda não estão em `.claude/skills/`,
 bundle para lá, para que as chamadas seguintes aconteçam sem repetir o caminho. O
 `sdd.config.md` acompanha a cópia, na raiz dela.
 
+<critical>A pasta `.sdd/` é oculta: `cp -r <bundle>/* destino/` NÃO a copia, porque o glob do shell ignora nomes que começam com ponto. Use `cp -a <bundle>/. destino/` ou copie a pasta inteira. Sem a `.sdd/`, todas as skills do fluxo quebram por falta das baselines.</critical>
+
 Se o usuário recusar, ou a ferramenta não for o Claude Code, nada quebra: todas as skills
 continuam funcionando quando o usuário aponta o caminho do arquivo e pede para segui-lo.
 
-### 7. Relatar (obrigatório)
+### 7. Gravar o atalho `/configurar-sdd` (só no Claude Code)
+
+Esta skill vive dentro da pasta oculta `.sdd/`, um nível abaixo de `.claude/skills/`, justamente
+para não aparecer no meio das 7 skills do fluxo. O efeito colateral é que o Claude Code não a
+descobre sozinho — sem o atalho, reconfigurar exigiria digitar o caminho à mão.
+
+Se o projeto tem uma pasta `.claude/`, siga o <template_comando> e grave
+`.claude/commands/configurar-sdd.md` apontando para o caminho real desta skill. Se o arquivo já
+existir com o caminho correto, deixe como está. Se a ferramenta não for o Claude Code, pule esta
+etapa — ela não afeta nenhuma outra.
+
+### 8. Relatar (obrigatório)
 
 - O que foi **detectado** (com o arquivo que serviu de evidência) versus o que foi **perguntado**
 - Campos que ficaram indefinidos
 - Caminho do `sdd.config.md` gerado
 - Se as skills foram copiadas para `.claude/skills/`
+- Se o atalho `.claude/commands/configurar-sdd.md` foi gravado
 - Como acionar a primeira skill do fluxo (`criar-prd`) nos dois modos
 
 ## Checklist de qualidade
@@ -125,6 +140,7 @@ continuam funcionando quando o usuário aponta o caminho do arquivo e pede para 
 - [ ] Perguntas feitas só para campos incertos ou ausentes
 - [ ] Nenhum campo preenchido por suposição
 - [ ] `sdd.config.md` gravado na raiz do bundle
+- [ ] Atalho `.claude/commands/configurar-sdd.md` gravado, ou etapa justificadamente pulada
 - [ ] Config preexistente atualizado por seção, com diff aprovado
 - [ ] Relatório final entregue com detectado vs. perguntado e caminho do arquivo
 

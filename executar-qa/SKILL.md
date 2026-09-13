@@ -7,8 +7,8 @@ description: Valide a implementação de uma funcionalidade contra o PRD, a Tech
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
-<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
-<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
@@ -27,7 +27,7 @@ Você é um QA especializado em validar a qualidade de aplicações de qualquer 
 <critical>NUNCA baixe o threshold de cobertura para "passar". Falta de cobertura é achado do QA</critical>
 <critical>Use o método de validação declarado em `<ui_projeto>`: automação de navegador quando o produto é web, execução em dispositivo/emulador quando é mobile, verificação de contrato e comportamento quando não há interface</critical>
 <critical>Antes de rodar qualquer teste que ESCREVA dados em ambiente compartilhado, PEÇA CONFIRMAÇÃO explícita ao usuário</critical>
-<critical>Verifique a implementação contra `../_shared/SECURITY_BASELINE.md` — achado de segurança é bug, com severidade proporcional ao risco</critical>
+<critical>Verifique a implementação contra `../.sdd/_shared/SECURITY_BASELINE.md` — achado de segurança é bug, com severidade proporcional ao risco</critical>
 
 ## Objetivo
 
@@ -60,7 +60,7 @@ Utilize o `nome-da-funcionalidade` como o <prd>
 - Leia detalhadamente o PRD, a TechSpec e as Tasks
 - Leia detalhadamente cada arquivo de task
 - Crie um checklist baseado na verificação de cada requisito
-- Revise `../_shared/SECURITY_BASELINE.md`, `../_shared/QUALITY_BASELINE.md` e as extensões
+- Revise `../.sdd/_shared/SECURITY_BASELINE.md`, `../.sdd/_shared/QUALITY_BASELINE.md` e as extensões
   (`<seguranca_extensoes>`, `<qualidade_extensoes>`) do config
 - Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada, leia-a
   pela ferramenta indicada no config para os critérios de aceite registrados. Caso contrário, pule
@@ -84,7 +84,7 @@ Se qualquer etapa falhar, o QA é **REPROVADO** e a falha vira item em `bugs.md`
 - Rode o scanner de dependências vulneráveis declarado em `<comandos_projeto>` (na ausência de um
   específico, use o scanner padrão do gerenciador de pacotes do projeto)
 - Registre o número de achados por severidade
-- Confira a implementação contra `../_shared/SECURITY_BASELINE.md` e contra as regras de
+- Confira a implementação contra `../.sdd/_shared/SECURITY_BASELINE.md` e contra as regras de
   `<seguranca_extensoes>` do config
 - Achado de severidade **Alta** ou **Crítica** **reprova o QA** e vira bug em `bugs.md`, com
   severidade proporcional ao risco
@@ -190,7 +190,7 @@ ferramenta indicada no config. Caso contrário, pule esta etapa.
 - [ ] Tasks verificadas (todas completas)
 - [ ] Gate de `<comandos_projeto>` executado e resultado registrado (format, lint, testes,
       cobertura)
-- [ ] Scanner de vulnerabilidades executado e conferido contra `../_shared/SECURITY_BASELINE.md`
+- [ ] Scanner de vulnerabilidades executado e conferido contra `../.sdd/_shared/SECURITY_BASELINE.md`
 - [ ] Validação visual executada com o método de `<ui_projeto>`, quando aplicável
 - [ ] Testes ponta a ponta executados para todos os alvos que cobrem a feature, ou ausência
       justificada no relatório
@@ -206,4 +206,4 @@ ferramenta indicada no config. Caso contrário, pule esta etapa.
 <critical>O QA só está APROVADO quando TODOS os requisitos do PRD forem verificados e estiverem funcionando</critical>
 <critical>O QA está REPROVADO se o gate de `<comandos_projeto>` falhar — lint, format e o threshold de cobertura são bloqueantes</critical>
 <critical>Use o método de validação declarado em `<ui_projeto>`: automação de navegador quando o produto é web, execução em dispositivo/emulador quando é mobile, verificação de contrato e comportamento quando não há interface</critical>
-<critical>Achado de segurança de severidade Alta ou Crítica reprova o QA e vira bug, contra `../_shared/SECURITY_BASELINE.md`</critical>
+<critical>Achado de segurança de severidade Alta ou Crítica reprova o QA e vira bug, contra `../.sdd/_shared/SECURITY_BASELINE.md`</critical>

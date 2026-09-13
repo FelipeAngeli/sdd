@@ -355,7 +355,7 @@ projeto:
 
 ### Segurança
 
-[Verifique contra `_shared/SECURITY_BASELINE.md` e registre aqui o que é específico desta
+[Verifique contra `.sdd/_shared/SECURITY_BASELINE.md` e registre aqui o que é específico desta
 feature, além das regras de `<seguranca_extensoes>`.]
 
 ### Conformidade com as regras do projeto
@@ -363,7 +363,7 @@ feature, além das regras de `<seguranca_extensoes>`.]
 [Listar as regras aplicáveis e como a especificação as respeita:
 
 - Regras invioláveis registradas em `<limites_projeto>` do config
-- `_shared/SECURITY_BASELINE.md` e `_shared/QUALITY_BASELINE.md`
+- `.sdd/_shared/SECURITY_BASELINE.md` e `.sdd/_shared/QUALITY_BASELINE.md`
 - Convenções específicas de `<qualidade_extensoes>` e `<seguranca_extensoes>`
 - Desvios, se houver, com justificativa]
 

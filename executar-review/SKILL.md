@@ -7,8 +7,8 @@ description: Analise o código produzido para uma feature, verifique a conformid
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
-<baseline_seguranca>`../_shared/SECURITY_BASELINE.md`</baseline_seguranca>
-<baseline_qualidade>`../_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
+<baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
@@ -25,14 +25,14 @@ Você é um assistente especializado em Code Review de aplicações de qualquer 
 <critical>O REVIEW NÃO ESTÁ COMPLETO ATÉ QUE O GATE DE `<comandos_projeto>` PASSE INTEIRO</critical>
 <critical>Verifique SEMPRE as regras e convenções do projeto (`<limites_projeto>`, `<qualidade_extensoes>`, `<colaboracao_projeto>`) antes de apontar problemas</critical>
 <critical>Qualquer alteração em área read-only de `<limites_projeto>` REPROVA o review</critical>
-<critical>Confira a implementação contra `../_shared/SECURITY_BASELINE.md` — achado de segurança de severidade alta ou crítica reprova o review</critical>
+<critical>Confira a implementação contra `../.sdd/_shared/SECURITY_BASELINE.md` — achado de segurança de severidade alta ou crítica reprova o review</critical>
 
 ## Objetivos
 
 1. Verificar conformidade com as regras invioláveis e convenções do projeto
 2. Validar a conformidade arquitetural (direção de dependência entre camadas, isolamento da regra de negócio, injeção de dependência)
 3. Validar se o gate de `<comandos_projeto>` passa, incluindo o threshold de cobertura
-4. Conferir o resultado do scanner de dependências vulneráveis contra `../_shared/SECURITY_BASELINE.md`
+4. Conferir o resultado do scanner de dependências vulneráveis contra `../.sdd/_shared/SECURITY_BASELINE.md`
 5. Confirmar aderência à TechSpec e Tasks
 6. Verificar as convenções de colaboração de `<colaboracao_projeto>`
 7. Identificar code smells e oportunidades de melhoria
@@ -59,7 +59,7 @@ Utilize o `nome-da-funcionalidade` como o <prd>
 - Ler a TechSpec para entender as decisões arquiteturais esperadas
 - Ler as Tasks para verificar o escopo implementado
 - Revisar as regras invioláveis e as áreas read-only de `<limites_projeto>`
-- Revisar `../_shared/SECURITY_BASELINE.md`, `../_shared/QUALITY_BASELINE.md` e as extensões
+- Revisar `../.sdd/_shared/SECURITY_BASELINE.md`, `../.sdd/_shared/QUALITY_BASELINE.md` e as extensões
   (`<seguranca_extensoes>`, `<qualidade_extensoes>`) do config
 - Revisar as convenções de `<colaboracao_projeto>` (commit, branch, PR, comentários no código)
 - Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada, leia-a
@@ -95,7 +95,7 @@ As regras invioláveis de `<limites_projeto>` são bloqueantes. Verifique:
 - [ ] Lint sem warnings, verificado pelo comando de `<comandos_projeto>`
 - [ ] Nenhuma dependência nova adicionada sem justificativa registrada na TechSpec
 - [ ] Reuso do código compartilhado/núcleo do projeto em vez de duplicar componente ou utilitário
-- [ ] Logging sem dado sensível, conforme `../_shared/SECURITY_BASELINE.md`
+- [ ] Logging sem dado sensível, conforme `../.sdd/_shared/SECURITY_BASELINE.md`
 
 ### 4. Verificação de Aderência à TechSpec (Obrigatório)
 
@@ -142,21 +142,21 @@ Verificar:
 ### 7. Qualidade dos Testes (Obrigatório)
 
 Cobertura alta com teste ruim não vale nada. Confira a implementação contra
-`../_shared/QUALITY_BASELINE.md`, seção "Qualidade dos testes", sem repetir a lista aqui:
+`../.sdd/_shared/QUALITY_BASELINE.md`, seção "Qualidade dos testes", sem repetir a lista aqui:
 
 - [ ] Todos os itens da seção "Qualidade dos testes" da baseline verificados
 - [ ] Mock na fronteira certa, com a biblioteca declarada em `<stack_projeto>`
 
 ### 8. Análise de Qualidade de Código (Obrigatório)
 
-Confira a implementação contra `../_shared/QUALITY_BASELINE.md` (estrutura e complexidade, reuso,
+Confira a implementação contra `../.sdd/_shared/QUALITY_BASELINE.md` (estrutura e complexidade, reuso,
 nomenclatura, tratamento de erro, comentários, performance) e contra
-`../_shared/SECURITY_BASELINE.md` (segredos, dependências vulneráveis, injeção/validação,
+`../.sdd/_shared/SECURITY_BASELINE.md` (segredos, dependências vulneráveis, injeção/validação,
 autenticação/autorização, dados sensíveis, configuração segura), mais as extensões
 `<qualidade_extensoes>` e `<seguranca_extensoes>` do config:
 
-- [ ] Itens aplicáveis de `../_shared/QUALITY_BASELINE.md` verificados
-- [ ] Itens aplicáveis de `../_shared/SECURITY_BASELINE.md` verificados
+- [ ] Itens aplicáveis de `../.sdd/_shared/QUALITY_BASELINE.md` verificados
+- [ ] Itens aplicáveis de `../.sdd/_shared/SECURITY_BASELINE.md` verificados
 - [ ] Resultado do scanner de dependências vulneráveis de `<comandos_projeto>` conferido — achado
       de severidade alta ou crítica é bloqueante
 - [ ] Acessibilidade e i18n verificadas, quando `<ui_projeto>` indicar que são aplicáveis
@@ -196,7 +196,7 @@ achados pela ferramenta indicada no config. Caso contrário, pule esta etapa.
 - [ ] Gate de `<comandos_projeto>` executado e passando
 - [ ] Cobertura no threshold de `<comandos_projeto>` confirmada
 - [ ] Teste visual presente para telas novas, quando `<ui_projeto>` indicar ferramenta
-- [ ] Qualidade dos testes avaliada contra `../_shared/QUALITY_BASELINE.md` (não só a cobertura)
+- [ ] Qualidade dos testes avaliada contra `../.sdd/_shared/QUALITY_BASELINE.md` (não só a cobertura)
 - [ ] Qualidade de código e segurança avaliadas contra as duas baselines, incluindo o resultado do
       scanner de dependências vulneráveis
 - [ ] Convenção de commit/branch/PR de `<colaboracao_projeto>` respeitada

@@ -25,7 +25,7 @@
 | Verificação | Resultado | Observações |
 |-------------|-----------|-------------|
 | Scanner de dependências vulneráveis | [comando] — [N] achados (alta/crítica: [N]) | [obs] |
-| Baseline de segurança (`_shared/SECURITY_BASELINE.md`) | OK / [N] desvios | [obs] |
+| Baseline de segurança (`.sdd/_shared/SECURITY_BASELINE.md`) | OK / [N] desvios | [obs] |
 | Extensões de `<seguranca_extensoes>` | OK / [N] desvios | [obs] |
 
 > Achado de severidade alta ou crítica reprova o QA e vira bug.
