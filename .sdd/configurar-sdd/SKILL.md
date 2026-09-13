@@ -88,6 +88,11 @@ Temas que normalmente não são detectáveis e quase sempre viram pergunta:
 - Threshold de cobertura, quando o projeto não define um (sugira um valor e peça confirmação)
 - Convenção de commit/branch/PR, quando não houver `commitlint`, hook ou template
 - Padrão arquitetural, quando a estrutura for ambígua
+- Camada de **QA contínuo** (`<qa_continuo>`): o projeto quer manter uma árvore viva de QA por
+  produto — personas, jornadas, cenários, charters e um backlog de bugs cross-feature — além do
+  QA por feature que `executar-qa` já faz? Explique que é opt-in, que serve para regressão,
+  exploratório e sign-off de release, e que sem ela nada muda no fluxo das 7 skills. Se o usuário
+  disser sim, pergunte a pasta raiz (sugira `docs/qa/`)
 
 Os **padrões transversais** (tratamento de erro, injeção de dependência, roteamento, logging) são
 caso à parte: você os inferiu lendo código, não um manifesto, então a confiança é menor. Apresente
@@ -121,7 +126,13 @@ mkdir -p .claude/skills
 cp -R <bundle>/criar-prd <bundle>/criar-techspec <bundle>/criar-tasks \
       <bundle>/executar-task <bundle>/executar-qa <bundle>/executar-bugfix \
       <bundle>/executar-review <bundle>/.sdd <bundle>/VERSION .claude/skills/
+
+# só quando <qa_continuo> está com Ativo: sim
+cp -R <bundle>/qa .claude/skills/
 ```
+
+A pasta `qa/` só é copiada quando `<qa_continuo>` está com `Ativo: sim`. Projeto que não usa a
+camada não deve ganhar a pasta — skill que existe mas nunca roda é ruído na revisão do bundle.
 
 <critical>NUNCA copie o bundle com `cp -a <bundle>/. destino/` nem `cp -r <bundle>/* destino/`. O primeiro arrasta o `.git/` e o `.gitignore` do bundle mestre — e esse `.gitignore` faz o projeto destino ignorar o próprio `sdd.config.md`. O segundo omite a `.sdd/`, e sem ela todas as skills do fluxo quebram por falta das baselines.</critical>
 
@@ -131,16 +142,22 @@ o usuário: enquanto o `.gitignore` estiver lá, o `sdd.config.md` dele não ent
 Se o usuário recusar, ou a ferramenta não for o Claude Code, nada quebra: todas as skills
 continuam funcionando quando o usuário aponta o caminho do arquivo e pede para segui-lo.
 
-### 7. Gravar os atalhos `/configurar-sdd` e `/atualizar-sdd` (só no Claude Code)
+### 7. Gravar os atalhos do Claude Code (só no Claude Code)
 
-Estas duas skills vivem dentro da pasta oculta `.sdd/`, um nível abaixo de `.claude/skills/`,
-justamente para não aparecer no meio das 7 skills do fluxo. O efeito colateral é que o Claude Code
-não as descobre sozinho — sem os atalhos, chamá-las exigiria digitar o caminho à mão.
+`configurar-sdd` e `atualizar-sdd` vivem em `.sdd/`, e as duas skills de QA contínuo vivem em
+`qa/` — todas um nível abaixo de `.claude/skills/`, onde o Claude Code não as descobre sozinho.
+Sem os atalhos, chamá-las exigiria digitar o caminho à mão.
 
-Se o projeto tem uma pasta `.claude/`, siga o <template_comando> e grave
-`.claude/commands/configurar-sdd.md` e `.claude/commands/atualizar-sdd.md` apontando para os
-caminhos reais. Se um arquivo já existir com o caminho correto, deixe como está. Se a ferramenta
-não for o Claude Code, pule esta etapa — ela não afeta nenhuma outra.
+Se o projeto tem uma pasta `.claude/`, siga o <template_comando> e grave:
+
+- `.claude/commands/configurar-sdd.md` e `.claude/commands/atualizar-sdd.md` — sempre
+- `.claude/commands/criar-plano-qa.md` e `.claude/commands/executar-sessao-qa.md` — apenas quando
+  `<qa_continuo>` está com `Ativo: sim`
+
+apontando para os caminhos reais. Se um arquivo já existir com o caminho correto, deixe como está.
+Se `<qa_continuo>` passou de `sim` para `não` numa reconfiguração, remova os dois atalhos de QA e
+avise o usuário — atalho apontando para skill que não foi copiada é erro na primeira chamada.
+Se a ferramenta não for o Claude Code, pule esta etapa — ela não afeta nenhuma outra.
 
 ### 8. Relatar (obrigatório)
 
@@ -160,5 +177,6 @@ não for o Claude Code, pule esta etapa — ela não afeta nenhuma outra.
 - [ ] Nenhum campo preenchido por suposição
 - [ ] `sdd.config.md` gravado na raiz do bundle
 - [ ] Atalhos `.claude/commands/configurar-sdd.md` e `atualizar-sdd.md` gravados, ou etapa justificadamente pulada
+- [ ] `<qa_continuo>` decidido com o usuário; se ativo, `qa/` copiada e os dois atalhos de QA gravados
 - [ ] Config preexistente atualizado por seção, com diff aprovado
 - [ ] Relatório final entregue com detectado vs. perguntado e caminho do arquivo
