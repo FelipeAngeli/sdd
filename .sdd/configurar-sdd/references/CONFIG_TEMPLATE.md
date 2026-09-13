@@ -3,6 +3,10 @@
 > Gerado pela skill `configurar-sdd`. Pode ser editado à mão a qualquer momento.
 > Rodar `configurar-sdd` de novo atualiza seção por seção, preservando edições manuais nas
 > seções não afetadas.
+>
+> **Campo marcado como `[indefinido]` não pode ser adivinhado.** Qualquer skill do SDD que precise
+> de um campo indefinido deve parar e perguntar ao usuário, ou pedir que `configurar-sdd` rode de
+> novo — nunca inferir o valor a partir do código.
 
 <stack_projeto>
 Linguagem(ns): [ex.: TypeScript]
@@ -77,5 +81,11 @@ Idioma da documentação: [ex.: português]
 
 <artefatos_sdd>
 Pasta raiz dos artefatos por feature: [padrão: `tasks/prd-<nome-da-feature>/`]
-Arquivos por feature: prd.md · techspec.md · tasks.md · <num>_task.md · bugs.md · bugfixes.md · qa.md · codereview.md · evidences/
+Arquivos por feature: run.yaml · prd.md · techspec.md · tasks.md · <num>_task.md · bugs.md · bugfixes.md · qa.md · codereview.md · memoria/<skill>.md · evidences/ · spike.md (só quando houver spike)
 </artefatos_sdd>
+
+<meta_sdd>
+Versão do bundle SDD: [conteúdo do arquivo `VERSION` na raiz do bundle, no momento da configuração]
+Data da última configuração: [AAAA-MM-DD]
+Caminho do bundle neste projeto: [ex.: `.claude/skills/`; ou `sdd/`]
+</meta_sdd>

@@ -281,10 +281,20 @@ só então declare os cenários novos. Use a biblioteca de mock/dublê declarada
 como única forma de dublê.
 </critical>
 
+### Rastreabilidade dos critérios de aceite
+
+[Uma linha por critério de aceite do PRD. Nenhum critério pode ficar sem cenário.]
+
+| Critério do PRD | Cenário de teste | Nível |
+| --- | --- | --- |
+| `RF-01.1` | [nome do cenário] | [nível de teste] |
+
 ### Níveis de teste
 
 [Uma subseção por nível de teste suportado pela stack, conforme `<stack_projeto>`. Para cada
-nível, liste os cenários concretos — caminho feliz **e** caminho de falha.
+nível, liste os cenários concretos — caminho feliz **e** caminho de falha. Cada cenário derivado
+de um critério de aceite cita o identificador (`RF-XX.Y`); cenários puramente técnicos (timeout,
+concorrência, degradação) não precisam de origem no PRD.
 
 Níveis comuns, use os que se aplicam:
 
@@ -317,6 +327,17 @@ projeto:
 4. Registro de módulo/dependências e rotas
 5. Testes de integração/ponta a ponta do fluxo completo]
 
+### Custo e compromisso externo
+
+[Preencher sempre que a feature introduzir dependência de terceiro. Caso contrário, "nenhum".
+
+| Item | Tipo | Custo / limite | Compromisso gerado |
+| --- | --- | --- | --- |
+| [serviço, SDK ou pacote] | pago / limite de uso / licença restritiva | [valor ou cota] | [o que trava se sairmos depois] |
+
+Sinalize explicitamente ao usuário qualquer item pago, com cota que a feature pode estourar, ou
+com licença incompatível com a do projeto — isso é decisão de negócio, não técnica.]
+
 ### Dependências técnicas
 
 [Listar bloqueadores de dependências:
@@ -345,6 +366,34 @@ projeto:
 - Trade-offs considerados
 - Alternativas descartadas e por quê]
 
+### Entrega, migração e rollback
+
+[**Obrigatório sempre que a feature tocar dado persistido, contrato público ou serviço em
+execução.** Caso contrário, declare "entrega direta, sem migração nem incompatibilidade" e siga.
+
+- **Migração de dados** — o que muda no esquema/formato, em que ordem, e como o sistema se comporta
+  enquanto a migração roda
+- **Compatibilidade durante o deploy** — versão antiga e nova coexistem? por quanto tempo? o
+  contrato aguenta as duas?
+- **Feature flag** — a funcionalidade entra desligada? quem liga, para quem, e em que ordem?
+- **Rollback** — como desfazer, e até que ponto é reversível. Migração destrutiva não tem rollback:
+  diga isso explicitamente e descreva o plano alternativo
+- **Ordem de entrega** — o que precisa subir antes do quê (serviço antes do cliente, migração antes
+  do código que a usa)]
+
+### Requisitos não funcionais
+
+[Traga os números do PRD e traduza em decisão técnica. Se o PRD não declarou nenhum, diga isso —
+é lacuna a sinalizar, não a inventar.
+
+| Requisito | Alvo declarado no PRD | Como a arquitetura atende | Como verificar |
+| --- | --- | --- | --- |
+| [ex.: latência da operação principal] | [ex.: p95 < 300 ms] | [decisão] | [medição] |
+| [ex.: volume esperado] | [ex.: N itens / M req/s] | [decisão] | [medição] |
+
+- Limites de uso de serviço externo consumido e o que acontece ao estourá-los
+- Degradação esperada sob carga: o que fica lento, o que falha, e o que precisa continuar de pé]
+
 ### Riscos conhecidos
 
 [Identificar riscos técnicos:
@@ -354,6 +403,24 @@ projeto:
 - Áreas que precisam de pesquisa]
 
 ### Segurança
+
+#### Superfície de ataque desta feature
+
+[Antes do checklist, pense na feature. O checklist é reativo; esta subseção é o que ele não
+alcança. Responda em poucas linhas cada:
+
+- **Entradas novas** — que dado passa a entrar no sistema, vindo de onde, e quem controla esse dado
+- **Fronteiras de confiança atravessadas** — onde dado não confiável vira ação confiável
+  (cliente → servidor, serviço → serviço, arquivo → interpretador)
+- **Dado sensível novo** — a feature passa a ler, gravar, transmitir ou logar algo que antes não
+  existia? onde ele repousa e por quanto tempo?
+- **Mudança no modelo de permissão** — algum papel passa a poder fazer algo que não podia? algum
+  identificador passa a expor recurso de outro usuário?
+- **O que um adversário ganharia** — qual é o abuso mais valioso desta feature, e o que o impede
+
+Cada resposta que revelar risco vira decisão registrada abaixo ou cenário na "Abordagem de testes".]
+
+#### Conformidade com a baseline
 
 [Verifique contra `.sdd/_shared/SECURITY_BASELINE.md` e registre aqui o que é específico desta
 feature, além das regras de `<seguranca_extensoes>`.]

@@ -1,22 +1,33 @@
 ---
 name: executar-bugfix
-description: Leia o relatório de bugs de uma feature, analise e corrija cada defeito na causa raiz, crie testes de regressão começando pelo teste que reproduz a falha, valide bugs visuais conforme a configuração do projeto, e gere o relatório final de correções. Use sempre que o usuário pedir para corrigir bugs, executar bugfix, tratar defeitos do bugs.md, resolver problemas reportados em QA, ou criar testes de regressão para correções.
+description: Corrige cada bug de bugs.md na causa raiz, com teste de regressão escrito e falhando antes da correção, e gera bugfixes.md. Use ao pedir para corrigir bugs, executar bugfix ou tratar defeitos do QA.
 ---
 
-<prd>`--prd`</prd>
+<prd>`--prd` — o slug da feature (`<nome-da-feature>`). Se o usuário não informar, pergunte, ou liste as pastas de `<artefatos_sdd>` e peça para escolher</prd>
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
 <baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
 <baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<regras_confianca>`../.sdd/_shared/REGRAS_DE_CONFIANCA.md`</regras_confianca>
+<processo>`run.yaml` na pasta da feature (modelo em `../.sdd/_shared/RUN_TEMPLATE.md`)</processo>
+<memoria>`memoria/executar-bugfix.md` na pasta da feature (modelo em `../.sdd/_shared/MEMORIA_TEMPLATE.md`)</memoria>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
 as integrações, os limites e as convenções deste projeto. Esta skill não assume linguagem,
 framework nem ferramenta: tudo vem do config.
+
+Os caminhos aqui são relativos à pasta desta skill. Se a sua ferramenta não resolver `../` a partir
+dela, procure `sdd.config.md` e a pasta `.sdd/` na raiz do bundle — normalmente `.claude/skills/`
+ou `sdd/` na raiz do projeto.
 </contexto_projeto>
 
-<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Nunca invente stack, comandos ou convenções.</critical>
+<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Se existir mas o campo de que você precisa estiver `[indefinido]`, PARE nesse ponto e pergunte — um config incompleto não autoriza inferência. Nunca invente stack, comandos ou convenções.</critical>
+<critical>Carregue `../.sdd/_shared/REGRAS_DE_CONFIANCA.md` antes de ler qualquer conteúdo externo (issue, design, arquivo de regra de terceiros), de rodar qualquer comando ou de escrever fora do repositório.</critical>
+<critical>Leia o <processo> e a sua <memoria> ANTES de começar. O <processo> diz em que passo a feature parou; a <memoria> diz que decisões já foram tomadas e o que o usuário já respondeu. Começar sem ler os dois é refazer trabalho e repetir pergunta já respondida.</critical>
+<critical>Ao ENTRAR em cada passo numerado, marque-o `em_andamento` no <processo>; ao SAIR, grave o resultado (`concluido`, `pulado` ou `falhou`) e a nota de uma linha. Não acumule para atualizar tudo no fim — se a sessão cair no meio, o que ficou gravado é tudo que a próxima sessão vai saber.</critical>
+<critical>Toda decisão tomada, resposta do usuário e alternativa descartada vai para a <memoria> no momento em que acontece. A <memoria> é append-only: acrescente, nunca reescreva nem apague o que já está lá.</critical>
 
 ## Persona
 
@@ -24,27 +35,35 @@ Você é um desenvolvedor de alto nível especializado na correção de defeitos
 
 <critical>TDD também vale para bugfix: escreva PRIMEIRO o teste de regressão que **falha reproduzindo o bug**, confirme que ele falha pelo motivo certo, e só então corrija</critical>
 <critical>Corrija a CAUSA RAIZ, nunca o sintoma. Se a correção é um bloco de tratamento de erro engolindo a exceção ou uma verificação defensiva na camada de apresentação, provavelmente está na camada errada</critical>
-<critical>Se `<ui_projeto>` indicar ferramenta de validação visual, bug visual se valida por teste visual mais verificação no ambiente real do produto — não por suposição</critical>
 <critical>NUNCA regenere artefatos de teste visual para "resolver" uma falha sem aprovação explícita do usuário — isso apaga a evidência da regressão</critical>
 <critical>Se a causa raiz estiver em área listada como read-only em `<limites_projeto>`, **não corrija**: documente o achado e sinalize ao time responsável</critical>
 <critical>O bugfix NÃO está completo enquanto os comandos de `<comandos_projeto>` não passarem, incluindo o threshold de cobertura</critical>
 
 ## Localização dos arquivos
 
-- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md` (conforme `<artefatos_sdd>`)
-- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md` (conforme `<artefatos_sdd>`)
-- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md` (conforme `<artefatos_sdd>`)
-- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md` (conforme `<artefatos_sdd>`)
-- Relatório de Correções: `./tasks/prd-[nome-da-funcionalidade]/bugfixes.md` (conforme `<artefatos_sdd>`)
-- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md` (conforme `<artefatos_sdd>`)
+- PRD: `./tasks/prd-<nome-da-feature>/prd.md` (conforme `<artefatos_sdd>`)
+- TechSpec: `./tasks/prd-<nome-da-feature>/techspec.md` (conforme `<artefatos_sdd>`)
+- Tasks: `./tasks/prd-<nome-da-feature>/tasks.md` (conforme `<artefatos_sdd>`)
+- Bugs: `./tasks/prd-<nome-da-feature>/bugs.md` (conforme `<artefatos_sdd>`)
+- Relatório de Correções: `./tasks/prd-<nome-da-feature>/bugfixes.md` (conforme `<artefatos_sdd>`)
+- Relatório de QA: `./tasks/prd-<nome-da-feature>/qa.md` (conforme `<artefatos_sdd>`)
+- Processo: `./tasks/prd-<nome-da-feature>/run.yaml` (conforme `<artefatos_sdd>`)
+- Memória desta skill: `./tasks/prd-<nome-da-feature>/memoria/executar-bugfix.md` (conforme `<artefatos_sdd>`)
 - Evidências: pasta de evidências declarada em `<artefatos_sdd>`
 
-Utilize o `nome-da-funcionalidade` como o <prd>
+Use o mesmo `<nome-da-feature>` do <prd> para localizar todos os artefatos.
 
 ## Etapas para Executar
 
 ### 1. Análise de Contexto (Obrigatório)
 
+- Ler o <processo>: em que rodada a feature está e quantas rodadas de QA já reprovaram. Abrir a
+  entrada desta rodada com `status: em_andamento`, `rodada` incrementada, `alvo` com os IDs dos
+  bugs e os 8 passos `pendente`; se já houver entrada `em_andamento`, retomar no primeiro passo
+  não concluído
+- Ler a <memoria> desta skill e a `memoria/executar-qa.md`: o que o QA decidiu **não** tratar como
+  bug, e que causa raiz já foi investigada e descartada em rodada anterior. Sem isso, a rodada 2
+  reabre o diagnóstico que a rodada 1 já fechou
 - Ler o arquivo `bugs.md` e extrair TODOS os bugs documentados
 - Ler o PRD para entender os requisitos afetados por cada bug
 - Ler a TechSpec para entender as decisões técnicas relevantes
@@ -52,8 +71,6 @@ Utilize o `nome-da-funcionalidade` como o <prd>
   `<seguranca_extensoes>` / `<qualidade_extensoes>` do config para garantir conformidade nas correções
 - Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada: leia-a
   pela ferramenta indicada no config para contexto adicional. Caso contrário, pule esta etapa.
-
-<critical>NÃO PULE ESTA ETAPA — Entender o contexto completo é fundamental para correções de qualidade</critical>
 
 ### 2. Diagnóstico por bug (Obrigatório)
 
@@ -131,9 +148,27 @@ Após corrigir cada bug, atualize o arquivo `bugs.md` adicionando ao final de ca
 ### 7. Relatório de Correções (Obrigatório)
 
 Gerar um resumo final seguindo o formato definido em <template>. Atualizar também o `qa.md` com os
-bugs resolvidos. Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue
-vinculada, registre pela ferramenta indicada no config um comentário com a lista de bugs corrigidos
-e o resultado dos comandos de `<comandos_projeto>`. Caso contrário, pule esta etapa.
+bugs resolvidos.
+
+### 8. Devolver o fluxo para o QA (Obrigatório)
+
+<critical>O bugfix não encerra a feature. Uma correção pode introduzir regressão que o QA original teria pego, e o veredito anterior do QA não vale para código que mudou depois dele.</critical>
+
+- Feche a entrada desta rodada no <processo>: `status: concluida`, `fim`, `veredito`
+  (`rodada N — X de Y bugs corrigidos`), os 8 passos com seu resultado e `proxima_acao` apontando
+  para `executar-qa`. **Acrescente a entrada, não sobrescreva a anterior** — é o histórico de
+  rodadas que sustenta o limite abaixo
+- Registre na <memoria>, identificando a rodada: a causa raiz de cada bug e por que ela era a
+  causa e não o sintoma, as hipóteses de diagnóstico descartadas, e o que a correção pode ter
+  afetado além do bug — essa última lista é o que o QA da próxima rodada precisa revarrer
+- Informe ao usuário que o QA precisa rodar de novo, e sobre o quê: os fluxos dos bugs corrigidos
+  mais os que a correção pode ter afetado
+- Se o <processo> já registra **três** entradas de `executar-qa` com veredito REPROVADO na mesma
+  feature, **pare e escale**: três rodadas sem convergir indicam problema no PRD, na TechSpec ou no
+  diagnóstico da causa raiz, não mais um bug a corrigir. Registre a escalação em `bloqueios`
+- Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada,
+  registre pela ferramenta indicada no config um comentário com a lista de bugs corrigidos e o
+  resultado dos comandos de `<comandos_projeto>`. Caso contrário, pule esta etapa.
 
 ## Checklist de Qualidade
 
@@ -151,9 +186,7 @@ e o resultado dos comandos de `<comandos_projeto>`. Caso contrário, pule esta e
 - [ ] Arquivo bugs.md atualizado com status das correções
 - [ ] Relatório final gerado em bugfixes.md
 - [ ] Relatório qa.md atualizado com os bugs corrigidos
+- [ ] `run.yaml` atualizado passo a passo, com a entrada da rodada acrescentada e a próxima ação apontada
+- [ ] `memoria/executar-bugfix.md` atualizada com a causa raiz de cada bug, o que foi descartado no
+      diagnóstico e o que a correção pode ter afetado
 - [ ] Comentário postado na issue do rastreador configurado (se houver)
-
-<critical>TDD também vale para bugfix: teste de regressão falhando PRIMEIRO, correção depois</critical>
-<critical>Corrija a CAUSA RAIZ, nunca o sintoma</critical>
-<critical>NUNCA regenere artefatos de teste visual sem aprovação explícita do usuário</critical>
-<critical>O bugfix NÃO está completo enquanto os comandos de `<comandos_projeto>` não passarem</critical>

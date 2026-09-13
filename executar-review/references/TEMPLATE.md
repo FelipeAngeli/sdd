@@ -3,6 +3,7 @@
 ## Resumo
 - Data: [data]
 - Branch: [branch]
+- Escopo do diff: [ex.: `main...HEAD` — N arquivos, M linhas] — [como foi delimitado]
 - Status: APROVADO / APROVADO COM RESSALVAS / REPROVADO
 - Issue vinculada: [identificador no rastreador configurado ou "sem issue"]
 

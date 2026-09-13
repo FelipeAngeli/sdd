@@ -15,8 +15,20 @@ e de qualidade do bundle SDD. Carregue tudo antes de implementar.]
 </regras>
 
 <requirements>
-[Lista de requisitos obrigatórios (usar os RFs do PRD quando aplicável)]
+[Os RFs do PRD que esta tarefa atende, com os critérios de aceite correspondentes copiados por
+extenso (`RF-XX.Y` — Dado/Quando/Então). São eles que as subtarefas de teste precisam verificar.]
 </requirements>
+
+<contexto_herdado>
+[O que esta tarefa precisa saber das tarefas anteriores para ser executada sem reler PRD e
+TechSpec inteiros: interfaces já criadas e suas assinaturas, decisões tomadas, caminhos de arquivo
+relevantes, helpers de teste disponíveis. Preenchido por `criar-tasks`. Se a tarefa não depende de
+nenhuma anterior, escreva "nenhum".]
+
+**Depende de:** [tarefas que precisam estar concluídas antes; ou "nenhuma"]
+**Bloqueia:** [tarefas que só podem começar depois desta; ou "nenhuma"]
+**Pode rodar em paralelo com:** [tarefas sem dependência mútua; ou "nenhuma"]
+</contexto_herdado>
 
 ## Subtarefas
 
@@ -36,7 +48,8 @@ e de qualidade do bundle SDD. Carregue tudo antes de implementar.]
 - [Resultados mensuráveis]
 - [Requisitos de qualidade]
 - [ ] Comandos de `<comandos_projeto>` (format, lint, testes) passam
-- [ ] Cobertura não derruba o threshold declarado em `<comandos_projeto>`
+- [ ] Cobertura **atinge** o threshold declarado em `<comandos_projeto>` — se faltar cobertura,
+      escreve-se mais teste; nunca se baixa o threshold
 
 ## Testes da tarefa
 

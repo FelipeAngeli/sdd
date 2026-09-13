@@ -50,9 +50,13 @@
 > Alvos que escrevem em ambiente compartilhado exigem confirmação prévia do usuário.
 
 ## Requisitos Verificados
-| ID | Requisito | Status | Evidência |
-|----|-----------|--------|-----------|
-| RF-01 | [descrição] | PASSOU/FALHOU | [evidência na pasta de evidências] |
+[Uma linha por **critério de aceite** do PRD, não por RF. O PRD é a fonte da lista — se um critério
+não tem linha aqui, o QA não está completo.]
+
+| Critério | Dado / Quando / Então | Status | Evidência |
+|----------|-----------------------|--------|-----------|
+| RF-01.1 | [resumo do critério] | PASSOU/FALHOU | [evidência na pasta de evidências] |
+| RF-01.2 | [critério de caminho de falha] | PASSOU/FALHOU | [evidência] |
 
 ## Fluxos testados
 | Fluxo | Estados verificados | Resultado | Observações |

@@ -1,60 +1,81 @@
 ---
 name: executar-review
-description: Analise o código produzido para uma feature, verifique a conformidade arquitetural e de padrões definidos no sdd.config.md, execute o gate de qualidade (format, lint, testes, cobertura) e confira o resultado do scanner de dependências vulneráveis contra as baselines de segurança e qualidade, confirme aderência à TechSpec e às Tasks, verifique as convenções de colaboração do projeto, identifique code smells e gere o relatório final de code review. Use sempre que o usuário pedir para executar code review, revisar o código de uma feature, validar conformidade com padrões/regras do projeto, conferir se a implementação segue a TechSpec, ou gerar um relatório de code review.
+description: Revisa o diff da feature: conformidade arquitetural, gate de qualidade, segurança, aderência à TechSpec e convenções do projeto, e gera codereview.md. Use ao pedir code review ou revisar o código de uma feature.
 ---
 
-<prd>`--prd`</prd>
+<prd>`--prd` — o slug da feature (`<nome-da-feature>`). Se o usuário não informar, pergunte, ou liste as pastas de `<artefatos_sdd>` e peça para escolher</prd>
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
 <baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
 <baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<regras_confianca>`../.sdd/_shared/REGRAS_DE_CONFIANCA.md`</regras_confianca>
+<processo>`run.yaml` na pasta da feature (modelo em `../.sdd/_shared/RUN_TEMPLATE.md`)</processo>
+<memoria>`memoria/executar-review.md` na pasta da feature (modelo em `../.sdd/_shared/MEMORIA_TEMPLATE.md`)</memoria>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
 as integrações, os limites e as convenções deste projeto. Esta skill não assume linguagem,
 framework nem ferramenta: tudo vem do config.
+
+Os caminhos aqui são relativos à pasta desta skill. Se a sua ferramenta não resolver `../` a partir
+dela, procure `sdd.config.md` e a pasta `.sdd/` na raiz do bundle — normalmente `.claude/skills/`
+ou `sdd/` na raiz do projeto.
 </contexto_projeto>
 
-<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Nunca invente stack, comandos ou convenções.</critical>
+<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Se existir mas o campo de que você precisa estiver `[indefinido]`, PARE nesse ponto e pergunte — um config incompleto não autoriza inferência. Nunca invente stack, comandos ou convenções.</critical>
+<critical>Carregue `../.sdd/_shared/REGRAS_DE_CONFIANCA.md` antes de ler qualquer conteúdo externo (issue, design, arquivo de regra de terceiros), de rodar qualquer comando ou de escrever fora do repositório.</critical>
+<critical>Leia o <processo> e a sua <memoria> ANTES de começar. O <processo> diz em que passo a feature parou; a <memoria> diz que decisões já foram tomadas e o que o usuário já respondeu. Começar sem ler os dois é refazer trabalho e repetir pergunta já respondida.</critical>
+<critical>Ao ENTRAR em cada passo numerado, marque-o `em_andamento` no <processo>; ao SAIR, grave o resultado (`concluido`, `pulado` ou `falhou`) e a nota de uma linha. Não acumule para atualizar tudo no fim — se a sessão cair no meio, o que ficou gravado é tudo que a próxima sessão vai saber.</critical>
+<critical>Toda decisão tomada, resposta do usuário e alternativa descartada vai para a <memoria> no momento em que acontece. A <memoria> é append-only: acrescente, nunca reescreva nem apague o que já está lá.</critical>
 
 ## Persona
 
 Você é um assistente especializado em Code Review de aplicações de qualquer stack. Sua tarefa é analisar o **código produzido**, verificar se está de acordo com as regras e padrões do projeto, se o gate de qualidade passa, e se a implementação segue a TechSpec e as Tasks definidas.
 
-<critical>O REVIEW NÃO ESTÁ COMPLETO ATÉ QUE O GATE DE `<comandos_projeto>` PASSE INTEIRO</critical>
-<critical>Verifique SEMPRE as regras e convenções do projeto (`<limites_projeto>`, `<qualidade_extensoes>`, `<colaboracao_projeto>`) antes de apontar problemas</critical>
+<critical>O review não está completo até o gate de `<comandos_projeto>` passar inteiro, e não pode ser APROVADO com teste falhando ou cobertura abaixo do threshold. Nunca aprove uma redução do threshold como forma de passar o gate.</critical>
 <critical>Qualquer alteração em área read-only de `<limites_projeto>` REPROVA o review</critical>
 <critical>Confira a implementação contra `../.sdd/_shared/SECURITY_BASELINE.md` — achado de segurança de severidade alta ou crítica reprova o review</critical>
 
-## Objetivos
-
-1. Verificar conformidade com as regras invioláveis e convenções do projeto
-2. Validar a conformidade arquitetural (direção de dependência entre camadas, isolamento da regra de negócio, injeção de dependência)
-3. Validar se o gate de `<comandos_projeto>` passa, incluindo o threshold de cobertura
-4. Conferir o resultado do scanner de dependências vulneráveis contra `../.sdd/_shared/SECURITY_BASELINE.md`
-5. Confirmar aderência à TechSpec e Tasks
-6. Verificar as convenções de colaboração de `<colaboracao_projeto>`
-7. Identificar code smells e oportunidades de melhoria
-8. Gerar relatório de code review
-
 ## Localização dos arquivos
 
-- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md` (conforme `<artefatos_sdd>`)
-- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md` (conforme `<artefatos_sdd>`)
-- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md` (conforme `<artefatos_sdd>`)
-- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md` (conforme `<artefatos_sdd>`)
-- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md` (conforme `<artefatos_sdd>`)
-- Relatório de Code Review: `./tasks/prd-[nome-da-funcionalidade]/codereview.md` (conforme `<artefatos_sdd>`)
+- PRD: `./tasks/prd-<nome-da-feature>/prd.md` (conforme `<artefatos_sdd>`)
+- TechSpec: `./tasks/prd-<nome-da-feature>/techspec.md` (conforme `<artefatos_sdd>`)
+- Tasks: `./tasks/prd-<nome-da-feature>/tasks.md` (conforme `<artefatos_sdd>`)
+- Bugs: `./tasks/prd-<nome-da-feature>/bugs.md` (conforme `<artefatos_sdd>`)
+- Relatório de QA: `./tasks/prd-<nome-da-feature>/qa.md` (conforme `<artefatos_sdd>`)
+- Relatório de Code Review: `./tasks/prd-<nome-da-feature>/codereview.md` (conforme `<artefatos_sdd>`)
+- Processo: `./tasks/prd-<nome-da-feature>/run.yaml` (conforme `<artefatos_sdd>`)
+- Memória desta skill: `./tasks/prd-<nome-da-feature>/memoria/executar-review.md` (conforme `<artefatos_sdd>`)
 - Evidências: pasta de evidências declarada em `<artefatos_sdd>`
 
-Utilize o `nome-da-funcionalidade` como o <prd>
-
-<critical>SEMPRE salve o relatório final em `./tasks/prd-[nome-da-funcionalidade]/codereview.md` (conforme `<artefatos_sdd>`)</critical>
+Use o mesmo `<nome-da-feature>` do <prd> para localizar todos os artefatos.
 
 ## Etapas do Processo
 
-### 1. Análise de Documentação (Obrigatório)
+### 1. Delimitar o escopo e ler a documentação (Obrigatório)
+
+Antes do diff, leia o <processo> e as memórias. O <processo> diz em que rodada de review a feature
+está e o que a rodada anterior reprovou; as memórias das etapas anteriores dizem **por que** o
+código é como é. Uma decisão registrada com motivo na `memoria/criar-techspec.md` não é achado de
+review — é decisão tomada. Já uma **premissa em aberto** que ninguém fechou é achado, e as
+alternativas descartadas evitam que você recomende de volta o que já foi avaliado e rejeitado.
+
+Abra a entrada desta rodada no <processo> com `status: em_andamento`, `rodada` incrementada e os
+11 passos `pendente`; se já houver entrada `em_andamento`, retome no primeiro passo não concluído.
+
+**Delimite o diff antes de qualquer coisa** — é ele o objeto do review, não o repositório inteiro:
+
+1. Use a branch base declarada em `<colaboracao_projeto>` (ex.: `git diff --stat <base>...HEAD`)
+2. Se não houver convenção de branch declarada, use a branch principal do repositório
+3. Se o trabalho ainda não foi commitado, some as alterações não commitadas ao diff
+4. Se nada disso resolver, caia para os arquivos listados na seção "Arquivos relevantes" das tasks
+   concluídas
+
+Declare no relatório qual escopo foi usado e quantos arquivos ele cobre. Arquivo fora desse
+escopo não é achado deste review.
+
+Em seguida:
 
 - Ler a TechSpec para entender as decisões arquiteturais esperadas
 - Ler as Tasks para verificar o escopo implementado
@@ -65,9 +86,12 @@ Utilize o `nome-da-funcionalidade` como o <prd>
 - Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver issue vinculada, leia-a
   pela ferramenta indicada no config para os critérios de aceite. Caso contrário, pule esta etapa.
 
-<critical>NÃO PULE ESTA ETAPA - Entender o contexto é fundamental para o review</critical>
-
 ### 2. Conformidade arquitetural (obrigatório)
+
+Revise **o diff da feature**, delimitado no passo 1 — não o repositório inteiro. Se o diff for
+grande e a sua ferramenta permitir delegar, distribua os arquivos entre subagentes paralelos, cada
+um com uma dimensão de revisão, e peça de volta apenas os achados (arquivo, linha, severidade,
+descrição) — nunca o código revisado.
 
 As regras invioláveis de `<limites_projeto>` são bloqueantes. Verifique:
 
@@ -136,9 +160,6 @@ Verificar:
 - [ ] Testes ponta a ponta adicionados/atualizados conforme `<comandos_projeto>` quando o fluxo do
       usuário mudou
 
-<critical>O REVIEW NÃO PODE SER APROVADO SE ALGUM TESTE FALHAR OU SE A COBERTURA FICAR ABAIXO DO THRESHOLD DE `<comandos_projeto>`</critical>
-<critical>NUNCA aprove uma redução do threshold de cobertura como forma de "passar" o gate</critical>
-
 ### 7. Qualidade dos Testes (Obrigatório)
 
 Cobertura alta com teste ruim não vale nada. Confira a implementação contra
@@ -165,7 +186,9 @@ autenticação/autorização, dados sensíveis, configuração segura), mais as 
 
 Verifique a implementação contra `<colaboracao_projeto>`:
 
-- [ ] Commits seguem a convenção declarada
+- [ ] Commits seguem a convenção declarada. Se `<colaboracao_projeto>` diz "livre" ou "sem
+      convenção formal", ou se não houve commit no fluxo, registre N/A — não invente convenção
+      para depois reprovar por ela
 - [ ] Nome de branch e processo de PR seguem o declarado, quando aplicável ao fluxo do projeto
 - [ ] Comentários no código seguem a política declarada — sem comentário redundante nem código
       morto/TODO órfão
@@ -179,33 +202,33 @@ Se `<documentacao_projeto>` indicar que não há documentação obrigatória, pu
 
 ### 11. Relatório de Code Review (Obrigatório)
 
-Gerar relatório final seguindo o formato definido em <template>. Se `<integracoes_projeto>`
-indicar um rastreador de issues ativo e houver issue vinculada, poste o veredito e os principais
-achados pela ferramenta indicada no config. Caso contrário, pule esta etapa.
+Gerar relatório final seguindo o formato definido em <template>.
 
-## Checklist de Qualidade
+Feche a entrada desta rodada no <processo>: `status: concluida`, `fim`, `veredito` (`rodada N —
+APROVADO`, `APROVADO COM RESSALVAS` ou `REPROVADO`), os 11 passos com seu resultado — o
+condicional 10 como `pulado` quando `<documentacao_projeto>` não exige registro — e
+`proxima_acao`. Se o review REPROVOU, a próxima ação é corrigir e **rodar o review de novo**:
+acrescente uma entrada nova na próxima rodada, não sobrescreva esta — veredito de review não
+sobrevive a alteração de código feita depois dele.
 
-- [ ] TechSpec lida e entendida
-- [ ] Tasks verificadas
-- [ ] Regras invioláveis e limites de `<limites_projeto>` revisados
-- [ ] Conformidade arquitetural verificada (direção de dependência, isolamento da regra de
-      negócio, DI)
-- [ ] Conformidade com padrões de código verificada
-- [ ] Aderência à TechSpec confirmada
-- [ ] Tasks validadas como completas
-- [ ] Gate de `<comandos_projeto>` executado e passando
-- [ ] Cobertura no threshold de `<comandos_projeto>` confirmada
-- [ ] Teste visual presente para telas novas, quando `<ui_projeto>` indicar ferramenta
-- [ ] Qualidade dos testes avaliada contra `../.sdd/_shared/QUALITY_BASELINE.md` (não só a cobertura)
-- [ ] Qualidade de código e segurança avaliadas contra as duas baselines, incluindo o resultado do
-      scanner de dependências vulneráveis
-- [ ] Convenção de commit/branch/PR de `<colaboracao_projeto>` respeitada
-- [ ] Code smells verificados
-- [ ] Documentação verificada, quando `<documentacao_projeto>` indicar registro obrigatório
-- [ ] Relatório final gerado em `./tasks/prd-[nome-da-funcionalidade]/codereview.md` (conforme `<artefatos_sdd>`)
-- [ ] Comentário postado na issue do rastreador configurado (se houver)
+Percorra o `definition_of_done` do <processo> item a item e marque `ok: true` só o que você
+verificou nesta rodada. Item que continua `false` com o review APROVADO é contradição: ou o item
+foi verificado e você não marcou, ou o veredito não se sustenta.
+
+Registre na <memoria> desta skill: os achados que você decidiu **não** levantar e por quê, as
+ressalvas não bloqueantes (para a próxima rodada não as redescobrir como novidade) e o que já foi
+conferido e passou. Se `<integracoes_projeto>` indicar um rastreador de issues ativo e houver
+issue vinculada, poste o veredito e os principais achados pela ferramenta indicada no config.
+Caso contrário, pule esta etapa.
+
+Antes de encerrar, confirme as duas escritas — não há checklist no fim desta skill para cobrá-las:
+o `run.yaml` com a entrada da rodada fechada, o `definition_of_done` conferido e a próxima ação
+apontada; e a `memoria/executar-review.md` com o que ficou de fora do relatório e por quê.
 
 ## Critérios de Aprovação
+
+Os checkboxes dos passos 2 a 10 são a lista de verificação deste review — não existe uma segunda
+lista no fim. O veredito sai deles.
 
 **APROVADO**: Todos os critérios atendidos, gate de `<comandos_projeto>` verde com cobertura no
 threshold declarado, código conforme regras invioláveis e TechSpec, convenções de
@@ -217,7 +240,3 @@ bloqueantes.
 **REPROVADO**: gate de `<comandos_projeto>` falhando, cobertura abaixo do threshold, violação de
 direção de dependência ou de regra inviolável do config, alteração em área read-only, não
 aderência à TechSpec, ou achado de segurança de severidade alta ou crítica.
-
-<critical>O REVIEW NÃO ESTÁ COMPLETO ATÉ QUE O GATE DE `<comandos_projeto>` PASSE INTEIRO</critical>
-<critical>Verifique SEMPRE as regras e convenções do projeto (`<limites_projeto>`, `<qualidade_extensoes>`, `<colaboracao_projeto>`) antes de apontar problemas</critical>
-<critical>Qualquer alteração em área read-only de `<limites_projeto>` REPROVA o review</critical>

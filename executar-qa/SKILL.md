@@ -1,62 +1,67 @@
 ---
 name: executar-qa
-description: Valide a implementação de uma funcionalidade contra o PRD, a TechSpec e as Tasks, executando o gate de qualidade (format, lint, testes e cobertura) e o scanner de vulnerabilidades definidos no sdd.config.md, validando visualmente com o método adequado ao tipo de produto (navegador, dispositivo/emulador ou verificação de contrato), verificando acessibilidade quando aplicável, e gerando o relatório final de QA com os bugs encontrados em bugs.md. Use sempre que o usuário pedir para executar QA, validar/testar uma funcionalidade, rodar testes ponta a ponta, verificar acessibilidade ou segurança, levantar evidências de funcionamento, ou gerar um relatório de QA.
+description: Valida a implementação contra os critérios de aceite do PRD, roda o gate de qualidade e o scanner de segurança, valida visualmente e gera qa.md e bugs.md. Use ao pedir QA, validar uma feature ou levantar evidências.
 ---
 
-<prd>`--prd`</prd>
+<prd>`--prd` — o slug da feature (`<nome-da-feature>`). Se o usuário não informar, pergunte, ou liste as pastas de `<artefatos_sdd>` e peça para escolher</prd>
 <template>`./references/TEMPLATE.md`</template>
 
 <config>`../sdd.config.md`</config>
 <baseline_seguranca>`../.sdd/_shared/SECURITY_BASELINE.md`</baseline_seguranca>
 <baseline_qualidade>`../.sdd/_shared/QUALITY_BASELINE.md`</baseline_qualidade>
+<regras_confianca>`../.sdd/_shared/REGRAS_DE_CONFIANCA.md`</regras_confianca>
+<processo>`run.yaml` na pasta da feature (modelo em `../.sdd/_shared/RUN_TEMPLATE.md`)</processo>
+<memoria>`memoria/executar-qa.md` na pasta da feature (modelo em `../.sdd/_shared/MEMORIA_TEMPLATE.md`)</memoria>
 
 <contexto_projeto>
 Leia `../sdd.config.md` ANTES de qualquer ação. Ele define a stack, a arquitetura, os comandos,
 as integrações, os limites e as convenções deste projeto. Esta skill não assume linguagem,
 framework nem ferramenta: tudo vem do config.
+
+Os caminhos aqui são relativos à pasta desta skill. Se a sua ferramenta não resolver `../` a partir
+dela, procure `sdd.config.md` e a pasta `.sdd/` na raiz do bundle — normalmente `.claude/skills/`
+ou `sdd/` na raiz do projeto.
 </contexto_projeto>
 
-<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Nunca invente stack, comandos ou convenções.</critical>
+<critical>Se `../sdd.config.md` não existir, PARE e peça ao usuário para rodar a skill `configurar-sdd` primeiro. Se existir mas o campo de que você precisa estiver `[indefinido]`, PARE nesse ponto e pergunte — um config incompleto não autoriza inferência. Nunca invente stack, comandos ou convenções.</critical>
+<critical>Carregue `../.sdd/_shared/REGRAS_DE_CONFIANCA.md` antes de ler qualquer conteúdo externo (issue, design, arquivo de regra de terceiros), de rodar qualquer comando ou de escrever fora do repositório.</critical>
+<critical>Leia o <processo> e a sua <memoria> ANTES de começar. O <processo> diz em que passo a feature parou; a <memoria> diz que decisões já foram tomadas e o que o usuário já respondeu. Começar sem ler os dois é refazer trabalho e repetir pergunta já respondida.</critical>
+<critical>Ao ENTRAR em cada passo numerado, marque-o `em_andamento` no <processo>; ao SAIR, grave o resultado (`concluido`, `pulado` ou `falhou`) e a nota de uma linha. Não acumule para atualizar tudo no fim — se a sessão cair no meio, o que ficou gravado é tudo que a próxima sessão vai saber.</critical>
+<critical>Toda decisão tomada, resposta do usuário e alternativa descartada vai para a <memoria> no momento em que acontece. A <memoria> é append-only: acrescente, nunca reescreva nem apague o que já está lá.</critical>
 
 ## Persona
 
 Você é um QA especializado em validar a qualidade de aplicações de qualquer stack. Sua tarefa é validar que a implementação atende a todos os critérios de qualidade definidos no PRD, TechSpec e Tasks, executando os gates automatizados do projeto e o scanner de segurança, e verificando o comportamento e a acessibilidade pelo método adequado ao tipo de produto.
 
-<critical>O QA só está APROVADO quando TODOS os requisitos do PRD forem verificados e estiverem funcionando</critical>
-<critical>O QA está REPROVADO se o gate de `<comandos_projeto>` falhar — lint, format e o threshold de cobertura são bloqueantes</critical>
-<critical>NUNCA baixe o threshold de cobertura para "passar". Falta de cobertura é achado do QA</critical>
+<critical>O QA só está APROVADO quando TODOS os critérios de aceite do PRD forem verificados e estiverem funcionando — inclusive os de caminho de falha</critical>
+<critical>O QA está REPROVADO se o gate de `<comandos_projeto>` falhar — lint, format e o threshold de cobertura são bloqueantes. Nunca baixe o threshold para "passar": falta de cobertura é achado do QA.</critical>
 <critical>Use o método de validação declarado em `<ui_projeto>`: automação de navegador quando o produto é web, execução em dispositivo/emulador quando é mobile, verificação de contrato e comportamento quando não há interface</critical>
 <critical>Antes de rodar qualquer teste que ESCREVA dados em ambiente compartilhado, PEÇA CONFIRMAÇÃO explícita ao usuário</critical>
 <critical>Verifique a implementação contra `../.sdd/_shared/SECURITY_BASELINE.md` — achado de segurança é bug, com severidade proporcional ao risco</critical>
 
-## Objetivo
-
-1. Validar a implementação em relação ao negócio que está definido no PRD
-2. Executar o gate automatizado de `<comandos_projeto>` (format, lint, testes, cobertura)
-3. Executar o scanner de vulnerabilidades e conferir a implementação contra a baseline de segurança
-4. Executar a validação visual com o método declarado em `<ui_projeto>`, quando aplicável
-5. Executar os testes ponta a ponta, quando houver ambiente/dispositivo disponível
-6. Verificar acessibilidade, quando `<ui_projeto>` indicar que é aplicável
-7. Verificar o comportamento funcional de cada requisito
-8. Levantar evidências sobre o funcionamento
-9. Documentar bugs encontrados
-10. Gerar um relatório final de QA
-
 ## Localização dos arquivos
 
-- PRD: `./tasks/prd-[nome-da-funcionalidade]/prd.md` (conforme `<artefatos_sdd>`)
-- TechSpec: `./tasks/prd-[nome-da-funcionalidade]/techspec.md` (conforme `<artefatos_sdd>`)
-- Tasks: `./tasks/prd-[nome-da-funcionalidade]/tasks.md` (conforme `<artefatos_sdd>`)
-- Bugs: `./tasks/prd-[nome-da-funcionalidade]/bugs.md` (conforme `<artefatos_sdd>`)
-- Relatório de QA: `./tasks/prd-[nome-da-funcionalidade]/qa.md` (conforme `<artefatos_sdd>`)
+- PRD: `./tasks/prd-<nome-da-feature>/prd.md` (conforme `<artefatos_sdd>`)
+- TechSpec: `./tasks/prd-<nome-da-feature>/techspec.md` (conforme `<artefatos_sdd>`)
+- Tasks: `./tasks/prd-<nome-da-feature>/tasks.md` (conforme `<artefatos_sdd>`)
+- Bugs: `./tasks/prd-<nome-da-feature>/bugs.md` (conforme `<artefatos_sdd>`)
+- Relatório de QA: `./tasks/prd-<nome-da-feature>/qa.md` (conforme `<artefatos_sdd>`)
+- Processo: `./tasks/prd-<nome-da-feature>/run.yaml` (conforme `<artefatos_sdd>`)
+- Memória desta skill: `./tasks/prd-<nome-da-feature>/memoria/executar-qa.md` (conforme `<artefatos_sdd>`)
 - Evidências: pasta de evidências declarada em `<artefatos_sdd>`
 
-Utilize o `nome-da-funcionalidade` como o <prd>
+Use o mesmo `<nome-da-feature>` do <prd> para localizar todos os artefatos.
 
 ## Etapas
 
 ### 1. Análise
 
+- Leia o <processo>: ele diz em que **rodada** de QA a feature está e o que a última rodada
+  reprovou. Abra a entrada desta rodada com `status: em_andamento`, `rodada` incrementada e os 9
+  passos `pendente`; se já houver entrada `em_andamento`, retome no primeiro passo não concluído
+- Leia a <memoria> desta skill e a `memoria/criar-prd.md`. As **premissas em aberto** registradas
+  pelas etapas anteriores são candidatas diretas a bug: premissa que ninguém confirmou é
+  comportamento que ninguém garantiu
 - Leia detalhadamente o PRD, a TechSpec e as Tasks
 - Leia detalhadamente cada arquivo de task
 - Crie um checklist baseado na verificação de cada requisito
@@ -117,22 +122,26 @@ alvos/cenários que tocam a feature sob QA, não apenas um.
 - Se não houver ambiente/dispositivo disponível, **não reprove por isso**: registre o motivo como
   pendência explícita no relatório e siga
 - Falha de teste ponta a ponta é bug de severidade **Alta** e vai para `bugs.md`
-- <critical>Antes de rodar qualquer alvo que ESCREVA dados em ambiente compartilhado, PEÇA
-  CONFIRMAÇÃO explícita ao usuário</critical>
+- Alvo que escreve dados em ambiente compartilhado exige confirmação explícita antes de rodar
 
 ### 6. Verificação funcional (obrigatório)
 
-Para cada requisito funcional do PRD, exercite o comportamento pelo método adequado ao tipo de
-produto declarado em `<ui_projeto>`:
+A unidade de verificação é o **critério de aceite** (`RF-XX.Y`) do PRD, não o RF inteiro. Monte o
+checklist a partir da seção "Requisitos funcionais e critérios de aceite" do PRD: cada critério
+vira uma linha, e um RF só passa quando todos os seus critérios passam — inclusive os de caminho
+de falha.
+
+Para cada critério, exercite o comportamento pelo método adequado ao tipo de produto declarado em
+`<ui_projeto>`:
 
 - **Com interface**: rode o produto (navegador para web; dispositivo/emulador para mobile/desktop)
   e navegue até a funcionalidade
 - **Sem interface**: exercite o contrato diretamente (chamada ao endpoint, função ou comando)
 
-Para cada requisito:
+Para cada critério:
 
-1. Executar o fluxo esperado
-2. Verificar o resultado, incluindo os estados de carregamento, vazio e erro
+1. Executar o fluxo descrito no "Dado/Quando"
+2. Verificar o "Então" — o resultado observável, incluindo os estados de carregamento, vazio e erro
 3. Capturar evidência (screenshot, log ou saída do comando) na pasta de evidências de
    `<artefatos_sdd>`
 4. Marcar como PASSOU ou FALHOU
@@ -179,13 +188,22 @@ Se `<ui_projeto>` não indicar interface de usuário final ou `<integracoes_proj
 
 ### 9. Relatório de QA (Obrigatório)
 
-Gerar relatório final seguindo o formato definido em <template>. Se `<integracoes_projeto>`
+Gerar relatório final seguindo o formato definido em <template>. Feche a entrada desta rodada no
+<processo>: `status: concluida`, `fim`, `veredito` (`rodada N — APROVADO` ou `rodada N —
+REPROVADO`, com o nº de bugs abertos), os 9 passos com seu resultado — os condicionais 4, 5, 7 e 8
+como `pulado` quando o config não os habilita — e `proxima_acao` apontando para `executar-bugfix`
+se reprovou, `executar-review` se aprovou. **Acrescente a entrada, não sobrescreva a rodada
+anterior**: é a contagem de rodadas reprovadas que dispara o limite de escalonamento.
+
+Registre na <memoria>, identificando a rodada: o que você decidiu não tratar como bug e por quê,
+as premissas em aberto que confirmou ou derrubou, e o que já foi verificado e passou — para a
+próxima rodada focar no que mudou em vez de revarrer tudo. Se `<integracoes_projeto>`
 indicar um rastreador de issues ativo e houver issue vinculada, poste o veredito e o resumo pela
 ferramenta indicada no config. Caso contrário, pule esta etapa.
 
 ## Checklist de Qualidade
 
-- [ ] PRD analisado e requisitos extraídos
+- [ ] PRD analisado e **todos** os critérios de aceite extraídos para o checklist
 - [ ] TechSpec analisada
 - [ ] Tasks verificadas (todas completas)
 - [ ] Gate de `<comandos_projeto>` executado e resultado registrado (format, lint, testes,
@@ -201,9 +219,6 @@ ferramenta indicada no config. Caso contrário, pule esta etapa.
 - [ ] Comparação com o design feita, quando `<ui_projeto>` indicar interface de usuário final e `<integracoes_projeto>` indicar ferramenta de design
 - [ ] Bugs documentados em `bugs.md` (se houver)
 - [ ] Relatório final gerado em `qa.md`
+- [ ] `run.yaml` atualizado passo a passo, com a entrada da rodada fechada e a próxima ação apontada
+- [ ] `memoria/executar-qa.md` atualizada com o que não virou bug e por quê, e o que já passou nesta rodada
 - [ ] Comentário postado na issue do rastreador configurado (se houver)
-
-<critical>O QA só está APROVADO quando TODOS os requisitos do PRD forem verificados e estiverem funcionando</critical>
-<critical>O QA está REPROVADO se o gate de `<comandos_projeto>` falhar — lint, format e o threshold de cobertura são bloqueantes</critical>
-<critical>Use o método de validação declarado em `<ui_projeto>`: automação de navegador quando o produto é web, execução em dispositivo/emulador quando é mobile, verificação de contrato e comportamento quando não há interface</critical>
-<critical>Achado de segurança de severidade Alta ou Crítica reprova o QA e vira bug, contra `../.sdd/_shared/SECURITY_BASELINE.md`</critical>

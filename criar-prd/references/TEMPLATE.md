@@ -30,8 +30,34 @@ Formato use bullet list com US$NUM (US1)]
 
 - O que faz
 - Por que é importante
-- Como funciona em alto nível
-- Requisitos funcionais (numerados para clareza)]
+- Como funciona em alto nível]
+
+## Requisitos funcionais e critérios de aceite
+
+<critical>
+**OBRIGATÓRIO.** Esta seção é a espinha do fluxo SDD: cada RF daqui vira caso de teste na
+TechSpec, subtarefa de teste em `criar-tasks` e linha do checklist em `executar-qa`. RF sem
+critério de aceite testável faz as três etapas seguintes inventarem, cada uma, a própria
+interpretação do mesmo requisito.
+</critical>
+
+Um bloco por requisito. O critério descreve **comportamento observável** — nunca implementação.
+
+### RF-01 — [título curto do requisito]
+
+- **Prioridade:** MVP | incremento
+- **Histórias atendidas:** [US1, US2]
+
+| # | Dado | Quando | Então |
+| --- | --- | --- | --- |
+| RF-01.1 | [pré-condição ou estado inicial] | [ação do usuário ou evento] | [resultado observável] |
+| RF-01.2 | [estado que leva à falha] | [mesma ação] | [erro específico e o que o consumidor vê] |
+
+[Todo RF precisa de pelo menos um critério de caminho feliz **e** um de caminho de falha. Estados
+vazio e de carregamento entram aqui sempre que forem observáveis. Se um critério não puder ser
+verificado sem olhar o código por dentro, ele está escrito no nível errado — reescreva.]
+
+[Repita o bloco para cada RF.]
 
 ## Plataforma alvo
 
@@ -71,6 +97,26 @@ Descreva a jornada e a experiência do usuário:
 - Requisitos de acessibilidade, se `<ui_projeto>` indicar acessibilidade aplicável: rótulos para
   leitor de tela, contraste, alvo de interação, suporte a aumento de escala de fonte, navegação
   por teclado quando aplicável]
+
+## Requisitos não funcionais
+
+[Números, não adjetivos. "Rápido" não é verificável; "p95 abaixo de 300 ms" é. O que for
+verdadeiramente desconhecido fica como "a definir" — e vira risco, não silêncio.
+
+| Requisito | Alvo | Como será verificado |
+| --- | --- | --- |
+| [Desempenho percebido — ex.: tempo até o primeiro conteúdo] | [alvo] | [método] |
+| [Volume esperado — ex.: itens por usuário, requisições por minuto] | [alvo] | [método] |
+| [Disponibilidade, quando aplicável] | [alvo] | [método] |
+| [Limite de uso de serviço externo consumido] | [cota] | [método] |
+
+- Comportamento esperado quando o alvo é estourado: degradar, enfileirar, recusar?
+- Retenção e privacidade do dado gerado por esta feature]
+
+## Custo e compromissos externos
+
+[Preencher se a feature depender de serviço pago, cota de terceiro ou licença restritiva —
+é decisão de negócio e precisa aparecer aqui, não só na TechSpec. Se não houver, "nenhum".]
 
 ## Restrições técnicas de alto nível
 
