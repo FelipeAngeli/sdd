@@ -84,6 +84,12 @@ Pasta raiz dos artefatos por feature: [padrão: `tasks/prd-<nome-da-feature>/`]
 Arquivos por feature: run.yaml · prd.md · techspec.md · tasks.md · <num>_task.md · bugs.md · bugfixes.md · qa.md · codereview.md · memoria/<skill>.md · evidences/ · spike.md (só quando houver spike)
 </artefatos_sdd>
 
+<qa_continuo>
+Ativo: [sim | não]
+Pasta raiz da árvore viva de QA: [padrão: `docs/qa/`]
+Arquivos/pastas: run.yaml · memoria/<skill>.md · personas.md · journeys/J-<slug>.md · scenarios/<AREA>-<slug>.md · charters/CH-<slug>.md · bugs/BUG-<AAAAMMDD>-<slug>.md · reports/<AAAA-MM-DD>-<escopo>.md
+</qa_continuo>
+
 <meta_sdd>
 Versão do bundle SDD: [conteúdo do arquivo `VERSION` na raiz do bundle, no momento da configuração]
 Data da última configuração: [AAAA-MM-DD]

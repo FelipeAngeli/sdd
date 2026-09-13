@@ -1,6 +1,7 @@
 # Modelo da memória por etapa
 
-> Um arquivo por skill, em `memoria/<skill>.md` dentro da pasta da feature. É a **memória de
+> Um arquivo por skill, em `memoria/<skill>.md` dentro da pasta da feature — ou dentro da árvore de
+> `<qa_continuo>`, no caso das skills do grupo `qa/`. É a **memória de
 > trabalho da etapa**: guarda o que não cabe no artefato final.
 >
 > O `prd.md` diz *o que* foi decidido; o `techspec.md` diz *o que* foi escolhido. Nenhum dos dois

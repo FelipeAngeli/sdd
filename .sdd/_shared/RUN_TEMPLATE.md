@@ -1,6 +1,8 @@
 # Modelo do `run.yaml` — processo do fluxo SDD
 
-> Um arquivo por feature, na raiz da pasta da feature em `<artefatos_sdd>`. É a **fonte de verdade
+> Um arquivo por feature, na raiz da pasta da feature em `<artefatos_sdd>` — e, quando a camada de
+> QA contínuo está ativa, mais um na raiz da árvore de `<qa_continuo>`, com o mesmo esquema. É a
+> **fonte de verdade
 > sobre o que já foi feito e onde parou**. Toda skill do fluxo lê este arquivo ANTES de começar e o
 > atualiza **passo a passo enquanto trabalha** — não só no fim.
 >
@@ -104,6 +106,17 @@ faz um `run.yaml` escrito por uma sessão ser legível pela seguinte.
   5 Verificação de Completude das Tasks · 6 Execução dos Testes · 7 Qualidade dos Testes ·
   8 Análise de Qualidade de Código · 9 Convenções de Colaboração · 10 Documentação ·
   11 Relatório de Code Review
+- **criar-plano-qa** — 1 Resolver a árvore · 2 Estabelecer personas · 3 Mapear jornadas ·
+  4 Derivar cenários · 5 Planejar charters · 6 Reconciliar duplicatas · 7 Validar completude ·
+  8 Fechar o plano
+- **executar-sessao-qa** — 1 Preparação e pré-condições · 2 Montar a matriz de cobertura ·
+  3 Percorrer as jornadas · 4 Tour e edge cases · 5 Lentes de risco ·
+  6 Registrar e deduplicar achados · 7 Encaminhar bugs · 8 Fechar a sessão
+
+Os dois últimos são as skills do grupo `qa/` e escrevem no `run.yaml` da árvore de
+`<qa_continuo>`, não no de uma feature. O campo `feature:` do cabeçalho vira `escopo:` nesse
+arquivo (ex.: `escopo: produto-inteiro`), e `definition_of_done` não se aplica — a árvore de QA
+não fecha, ela é contínua.
 
 Passo condicional que não se aplica ao projeto entra como `pulado`, com a `nota` dizendo qual
 campo do config decidiu — nunca é omitido da lista. Passo omitido é indistinguível de passo
