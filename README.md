@@ -16,6 +16,9 @@ convenções e as integrações daquele projeto.
          sdd/.sdd sdd/VERSION destino/
    ```
 
+   Se você já sabe que quer a camada de QA contínuo, acrescente `sdd/qa` à lista. Se não souber
+   ainda, deixe fora: `configurar-sdd` pergunta e copia depois.
+
    > **Não use `cp -a sdd/. destino/` nem `cp -r sdd/* destino/`.** O primeiro arrasta o `.git/` e
    > o `.gitignore` do bundle mestre para dentro do projeto — e esse `.gitignore` faz o projeto
    > ignorar o próprio `sdd.config.md`, justamente o arquivo que você precisa versionar. O segundo
@@ -46,6 +49,26 @@ convenções e as integrações daquele projeto.
 | `executar-bugfix` | Corrige defeitos na causa raiz | `bugs.md` | `bugfixes.md` → volta ao QA |
 | `executar-review` | Revisa o diff e a conformidade | diff vs. branch base | `codereview.md` |
 
+### Grupo opcional: QA contínuo (`qa/`)
+
+As 7 skills acima trabalham **uma feature por vez**. Quando o time também precisa de QA que não
+nasce de um PRD — regressão do produto inteiro, teste exploratório, sign-off de release, backlog
+de bug cross-feature — existe um grupo opcional:
+
+| Skill | O que faz | Entrada | Saída |
+| --- | --- | --- | --- |
+| `criar-plano-qa` | Mantém a árvore viva de QA do produto | o produto e o time | `personas.md`, `journeys/`, `scenarios/`, `charters/` |
+| `executar-sessao-qa` | Roda a sessão contra um escopo e decide prontidão | um charter | `reports/<data>-<escopo>.md`, `bugs/` |
+
+A árvore vive no projeto (padrão `docs/qa/`), não por feature, e é contínua: atualiza e funde em
+vez de recriar. Bug encontrado numa sessão que pertence a uma feature existente entra no `bugs.md`
+dela e segue o `executar-bugfix` normal; bug que não pertence a nenhuma fica no backlog da árvore
+para triagem.
+
+A camada é **opt-in**: `configurar-sdd` pergunta se você quer, grava `<qa_continuo>` no
+`sdd.config.md` e só então copia `qa/` e cria os atalhos. Projeto que não ativa continua
+exatamente como antes.
+
 O fluxo **não é uma fila de mão única**: `executar-bugfix` devolve para `executar-qa`, e review
 reprovado volta para o review depois da correção. O `run.yaml` de cada feature registra em que
 etapa, em que **passo dentro da etapa** e em que rodada ela está — é o primeiro arquivo que toda
@@ -64,6 +87,7 @@ não passar, ela pergunta ou lista as features existentes.
 ```
 criar-prd/  criar-techspec/  criar-tasks/
 executar-task/  executar-qa/  executar-bugfix/  executar-review/
+qa/                 grupo opcional de QA contínuo: criar-plano-qa/ e executar-sessao-qa/
 .sdd/
   _shared/          baselines de segurança, qualidade e confiança, mais os modelos de run.yaml e de memória
   configurar-sdd/   a skill de adaptação e o esqueleto do arquivo de configuração
@@ -73,8 +97,11 @@ sdd.config.md       gerado por projeto
 ```
 
 As 7 pastas do fluxo ficam na raiz porque são o que você usa no dia a dia — no Claude Code, são
-exatamente as 7 skills que aparecem em `.claude/skills/`. Tudo que é infraestrutura vive em
-`.sdd/`, oculta, fora do caminho.
+exatamente as 7 skills que aparecem em `.claude/skills/`. O grupo `qa/` fica agrupado porque é
+opcional e cresce junto: no Claude Code ele é alcançado pelos atalhos `/criar-plano-qa` e
+`/executar-sessao-qa`, que `configurar-sdd` grava em `.claude/commands/` — o Claude Code não
+descobre sozinho skill que está um nível abaixo de `.claude/skills/`. Tudo que é infraestrutura
+vive em `.sdd/`, oculta, fora do caminho.
 
 O `sdd.config.md` fica visível de propósito: **é o único arquivo que muda de projeto para
 projeto**, e você deve lê-lo, editá-lo e versioná-lo.

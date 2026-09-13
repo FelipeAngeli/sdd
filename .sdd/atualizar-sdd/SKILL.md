@@ -34,6 +34,12 @@ Compare, arquivo a arquivo, apenas o que pertence ao bundle:
 - `.sdd/_shared/` — baselines de segurança, qualidade, confiança e os modelos de processo (`run.yaml`) e de memória
 - `.sdd/configurar-sdd/` e `.sdd/atualizar-sdd/`
 - `VERSION`
+- `qa/` — o grupo de QA contínuo, quando presente em qualquer uma das duas pontas
+
+`qa/` presente no mestre e ausente aqui **não é remoção**: é a camada opt-in que este projeto não
+ativou. Ofereça a cópia e a ativação (que exige rodar `configurar-sdd` para gravar
+`<qa_continuo>`), mas não copie por conta própria. O caminho inverso — presente aqui e ausente no
+mestre — é remoção de verdade e segue a regra normal de "removido no mestre".
 
 **Nunca** compare nem toque em: `sdd.config.md`, a pasta de artefatos de `<artefatos_sdd>`, ou
 qualquer arquivo do projeto fora do bundle.
