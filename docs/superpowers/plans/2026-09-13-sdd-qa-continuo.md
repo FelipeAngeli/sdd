@@ -135,10 +135,13 @@ Para:
 - [ ] **Step 6: Verificar o catálogo**
 
 ```bash
-grep -c '^- \*\*' .sdd/_shared/RUN_TEMPLATE.md
+sed -n '/^## Catálogo de passos/,/^## Rodadas/p' .sdd/_shared/RUN_TEMPLATE.md | grep -c '^- \*\*'
 ```
 
 Expected: `9` (7 skills de fluxo + 2 novas).
+
+> O `grep` precisa ser restrito à seção do catálogo: `grep -c '^- \*\*'` no arquivo inteiro também
+> conta a linha `- **Limite:**` da seção "Rodadas de verificação", e devolveria 10.
 
 - [ ] **Step 7: Commit**
 
