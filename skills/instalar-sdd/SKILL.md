@@ -29,6 +29,8 @@ Pergunte se o projeto já sabe que quer a camada opcional de QA contínuo (pasta
 usuário não souber, diga que dá para ativar depois — `configurar-sdd` pergunta de novo, e
 `atualizar-sdd` traz a pasta quando for a hora — e siga sem copiar `qa/` agora.
 
+<critical>Se `<DESTINO>/.sdd` já existir, PARE. Este projeto já tem uma cópia do SDD — sobrescrevê-la apagaria silenciosamente qualquer skill editada pelo time. Aponte o usuário para `atualizar-sdd`, que compara, mostra o diff e decide arquivo por arquivo, e não copie nada nesta situação.</critical>
+
 ### 3. Copiar
 
 Com o destino escolhido em `<DESTINO>`, crie a pasta se não existir e copie, pasta por pasta:
@@ -59,3 +61,4 @@ configurar o SDD neste projeto. A skill `instalar-sdd` termina aqui — tudo que
 - [ ] Cópia feita pasta por pasta, nomeada — nunca o diretório inteiro
 - [ ] `.claude-plugin/` e `skills/instalar-sdd/` (esta própria skill) nunca copiados para o destino
 - [ ] Entregue para `configurar-sdd` ao final, sem configurar nada nesta skill
+- [ ] `<DESTINO>/.sdd` conferido antes de copiar — se já existia, a skill parou e apontou para `atualizar-sdd`, sem sobrescrever nada

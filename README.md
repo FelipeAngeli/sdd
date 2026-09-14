@@ -46,12 +46,15 @@ marketplace de plugin.
 1. Peça para ser adicionado como collaborator no repositório (é privado).
 2. `claude plugin marketplace add FelipeAngeli/sdd`
 3. `claude plugin install sdd@sdd`
-4. Dentro do seu projeto, rode `/instalar-sdd` — ela pergunta o destino da cópia e se você quer a
+4. Dentro do seu projeto, rode `/sdd:instalar-sdd` — ela pergunta o destino da cópia e se você quer a
    camada de QA contínuo, copia as pastas certas e entrega direto para `/configurar-sdd`.
 
 Dali em diante não há diferença nenhuma para quem instalou manualmente: mesma cópia versionada no
 seu projeto, mesmo `atualizar-sdd`, mesmo `sdd.config.md`. O que muda é só como o bundle chegou
 até aqui.
+
+Para quem instalou via plugin, o "bundle mestre" que `atualizar-sdd` pede é a própria instalação do
+plugin (`~/.claude/plugins/cache/sdd/sdd/<version>/`), mantida em dia com `claude plugin update sdd`.
 
 ## O fluxo
 
