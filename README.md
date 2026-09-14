@@ -114,6 +114,10 @@ qa/                 grupo opcional de QA contínuo: criar-plano-qa/ e executar-s
   atualizar-sdd/    sincroniza esta cópia com um bundle mestre mais novo
 VERSION             versão do bundle, registrada no config de cada projeto
 sdd.config.md       gerado por projeto
+
+.claude-plugin/     manifestos do plugin do Claude Code (plugin.json, marketplace.json)
+skills/
+  instalar-sdd/     única skill que o plugin expõe — copia o bundle pro projeto e entrega para configurar-sdd
 ```
 
 As 7 pastas do fluxo ficam na raiz porque são o que você usa no dia a dia — no Claude Code, são
@@ -122,6 +126,12 @@ opcional e cresce junto: no Claude Code ele é alcançado pelos atalhos `/criar-
 `/executar-sessao-qa`, que `configurar-sdd` grava em `.claude/commands/` — o Claude Code não
 descobre sozinho skill que está um nível abaixo de `.claude/skills/`. Tudo que é infraestrutura
 vive em `.sdd/`, oculta, fora do caminho.
+
+`.claude-plugin/` e `skills/` só existem no bundle mestre — são o que torna este repositório
+instalável como plugin do Claude Code (veja "Instalar via plugin do Claude Code" acima).
+Nenhuma cópia do bundle recebe essas duas pastas: `instalar-sdd` nomeia exatamente as mesmas 7
+pastas de fluxo + `.sdd/` + `VERSION` (+ `qa/`, se pedido) que a cópia manual já usa, nunca a si
+mesma nem `.claude-plugin/`.
 
 O `sdd.config.md` fica visível de propósito: **é o único arquivo que muda de projeto para
 projeto**, e você deve lê-lo, editá-lo e versioná-lo.
