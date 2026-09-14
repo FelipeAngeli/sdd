@@ -44,10 +44,21 @@ Se você usa Claude Code, existe um caminho mais curto que os 4 passos acima: o 
 marketplace de plugin.
 
 1. Peça para ser adicionado como collaborator no repositório (é privado).
-2. `claude plugin marketplace add FelipeAngeli/sdd`
-3. `claude plugin install sdd@sdd`
-4. Dentro do seu projeto, rode `/sdd:instalar-sdd` — ela pergunta o destino da cópia e se você quer a
-   camada de QA contínuo, copia as pastas certas e entrega direto para `/configurar-sdd`.
+2. Rode, no terminal:
+
+   ```sh
+   claude plugin marketplace add FelipeAngeli/sdd
+   claude plugin install sdd@sdd
+   ```
+
+3. Dentro do seu projeto, no Claude Code, rode:
+
+   ```
+   /sdd:instalar-sdd
+   ```
+
+   Ela pergunta o destino da cópia e se você quer a camada de QA contínuo, copia as pastas certas
+   e entrega direto para `/configurar-sdd`.
 
 Dali em diante não há diferença nenhuma para quem instalou manualmente: mesma cópia versionada no
 seu projeto, mesmo `atualizar-sdd`, mesmo `sdd.config.md`. O que muda é só como o bundle chegou
